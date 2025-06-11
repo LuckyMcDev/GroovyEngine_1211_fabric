@@ -22,6 +22,4 @@ public class GroovyLogger {
     public void error(String message) {
         GroovyEngine.LOGGER.error("[{}] {}", scriptName, message);
     }
-
-    // Optionally add debug, trace, etc. methods if you want
 }

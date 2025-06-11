@@ -1,11 +1,13 @@
 package io.github.luckymcdev.api.scripting;
 
 import groovy.lang.Binding;
+import groovy.lang.Closure;
 import groovy.lang.GroovyShell;
 import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.RegistryHelper;
 import io.github.luckymcdev.api.scripting.exposed.GroovyEngineContext;
 import io.github.luckymcdev.api.scripting.exposed.GroovyLogger;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -53,19 +55,60 @@ public class GroovyScriptLoader {
         // Per-script logger
         binding.setVariable("Logger", new GroovyLogger(scriptPath.getFileName().toString()));
 
-        // Item registering
+        // Registry helpers for Items and Blocks
         binding.setVariable("ItemRegistryHelper", new RegistryHelper<Item>(Registries.ITEM, "groovyengine"));
+        binding.setVariable("BlockRegistryHelper", new RegistryHelper<Block>(Registries.BLOCK, "groovyengine"));
+
+        // Common Minecraft classes for scripting convenience
         binding.setVariable("Item", Item.class);
-        binding.setVariable("ItemSettings", Item.Settings.class);
+        binding.setVariable("Block", Block.class);
+        binding.setVariable("BlockSettings", Block.Settings.class);
+        binding.setVariable("FabricBlockSettings", net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings.class);
+        binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
+        binding.setVariable("Blocks", net.minecraft.block.Blocks.class);
+        binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
 
 
 
-
-        // Shared API context
+        // Shared API context and utilities
         binding.setVariable("ctx", new GroovyEngineContext());
+
+        // Register function for flexible registrations
+        binding.setVariable("register", new Closure<Object>(null) {
+            public Object call(String type, String id, Object obj) {
+                switch(type.toLowerCase()) {
+                    case "item":
+                        ((RegistryHelper<Item>) binding.getVariable("ItemRegistryHelper")).register(id, (Item)obj);
+                        break;
+                    case "block":
+                        ((RegistryHelper<Block>) binding.getVariable("BlockRegistryHelper")).register(id, (Block)obj);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unknown registration type: " + type);
+                }
+                GroovyEngine.LOGGER.info("[GroovyEngine] Registered " + type + ": " + id);
+                return obj;
+            }
+        });
+
+        binding.setVariable("create", new Closure<Object>(null) {
+            public Object call(Object clazzObj, Object... args) {
+                if (!(clazzObj instanceof Class<?> clazz)) {
+                    throw new IllegalArgumentException("First argument must be a Class");
+                }
+                try {
+                    return org.codehaus.groovy.runtime.InvokerHelper.invokeConstructorOf(clazz, args);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to instantiate " + clazz.getName(), e);
+                }
+            }
+        });
+
+
 
         return new GroovyShell(binding, createCompilerConfig());
     }
+
 
     public static void loadScripts() {
         // Load shared libs first

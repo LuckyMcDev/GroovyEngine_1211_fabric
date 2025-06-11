@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "io.github.luckymcdev.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ExampleMixin",
+		"editor.imgui.MinecraftClientMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

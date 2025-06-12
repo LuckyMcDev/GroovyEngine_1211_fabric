@@ -37,6 +37,7 @@ public class MainEditorImGui {
 
     private static void renderDockSpace() {
 
+        /*
         Window window = MinecraftClient.getInstance().getWindow();
 
         int flags = ImGuiWindowFlags.NoTitleBar |
@@ -47,8 +48,8 @@ public class MainEditorImGui {
                 ImGuiWindowFlags.MenuBar |
                 ImGuiWindowFlags.NoBackground;
 
-        ImGui.setNextWindowPos(0,0);
-        ImGui.setNextWindowSize(window.getWidth(), window.getHeight());
+        ImGui.setNextWindowPos(0, 20);
+        ImGui.setNextWindowSize(window.getWidth() - 2, window.getHeight() - 15);
         ImGui.begin("DOCKSPACE", flags);
 
         // Dockspace ID
@@ -57,18 +58,12 @@ public class MainEditorImGui {
         ImGui.dockSpace(dockspaceId, 0.0f, 0.0f, ImGuiDockNodeFlags.PassthruCentralNode);
 
         ImGui.end();
+        
+         */
     }
 
     private static void renderMenuBar() {
-        int flags = ImGuiWindowFlags.NoTitleBar |
-                ImGuiWindowFlags.NoResize |
-                ImGuiWindowFlags.NoMove |
-                ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoCollapse |
-                ImGuiWindowFlags.MenuBar;
-
-        ImGui.begin("##MainMenuBar", flags);
-        if (ImGui.beginMenuBar()) {
+        if (ImGui.beginMainMenuBar()) {
             if (ImGui.beginMenu("Windows")) {
                 if (ImGui.menuItem("Console", "", showConsole)) showConsole = !showConsole;
                 if (ImGui.menuItem("Script Browser", "", showScripts)) showScripts = !showScripts;
@@ -84,9 +79,14 @@ public class MainEditorImGui {
                 ImGui.endMenu();
             }
 
-            ImGui.endMenuBar();
+            if(ImGui.beginMenu("Shaders")) {
+                if(ImGui.menuItem("COMING SOON!")) {
+
+                }
+                ImGui.endMenu();
+            }
+
+            ImGui.endMainMenuBar();
         }
-        menuBarHeight = ImGui.getWindowHeight();
-        ImGui.end();
     }
 }

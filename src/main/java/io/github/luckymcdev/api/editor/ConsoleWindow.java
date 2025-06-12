@@ -3,6 +3,10 @@ package io.github.luckymcdev.api.editor;
 import imgui.ImGui;
 import io.github.luckymcdev.api.logging.InMemoryLogAppender;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(EnvType.CLIENT)
 public class ConsoleWindow {
     public static void render() {
         ImGui.begin("Console");

@@ -13,24 +13,23 @@ import net.minecraft.util.Hand;
 
 public class EventRegistry {
 
-    public static void init() {
-
-        //Blocks
+    public static void initServer() {
         registerBlockBreak();
         registerBlockPlace();
-
-        //Player
         registerPlayerJoin();
         registerPlayerQuit();
-
-        //Tick
         registerServerTick();
-        registerClientTick();
-
-        //Registry
         registerItem();
         registerBlock();
     }
+
+    public static void initClient() {
+        registerClientTick();
+        registerItem();
+        registerBlock();
+    }
+
+    // --- SERVER EVENTS ---
 
     private static void registerBlockBreak() {
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
@@ -88,12 +87,16 @@ public class EventRegistry {
         });
     }
 
+    // --- CLIENT EVENTS ---
+
     private static void registerClientTick() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             EventContext ctx = new EventContext("clientTick");
             Events.trigger("clientTick", ctx);
         });
     }
+
+    // --- SHARED ---
 
     private static void registerItem() {
         EventContext ctx = new EventContext("registerItem");

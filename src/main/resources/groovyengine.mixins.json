@@ -4,9 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ExampleMixin",
-		"editor.imgui.MinecraftClientMixin",
-		"editor.input.KeyboardMixin",
-		"editor.input.MouseMixin"
+		"editor.imgui.MinecraftClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

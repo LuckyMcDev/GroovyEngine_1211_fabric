@@ -8,6 +8,10 @@ import imgui.ImGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(EnvType.CLIENT)
 public class MainEditorImGui {
     private static float menuBarHeight = 0;
 
@@ -58,7 +62,7 @@ public class MainEditorImGui {
         ImGui.dockSpace(dockspaceId, 0.0f, 0.0f, ImGuiDockNodeFlags.PassthruCentralNode);
 
         ImGui.end();
-        
+
          */
     }
 

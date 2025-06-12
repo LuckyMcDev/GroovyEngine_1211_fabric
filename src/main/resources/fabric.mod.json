@@ -3,9 +3,9 @@
 	"id": "groovyengine",
 	"version": "${version}",
 	"name": "GroovyEngine",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A Mod that tries to turn Minecraft into a Game Engine!",
 	"authors": [
-		"Me!"
+		"Lucky.dev"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",

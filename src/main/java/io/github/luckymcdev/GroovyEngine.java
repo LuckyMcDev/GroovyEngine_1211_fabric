@@ -44,9 +44,7 @@ public class GroovyEngine implements ModInitializer {
 		Events.trigger("registerBlock", new EventContext("registerBlock"));
 
 		// Initialize all other events like blockBreak, playerJoin etc.
-		EventRegistry.init();
+		EventRegistry.initServer();
 	}
-
-
 
 }

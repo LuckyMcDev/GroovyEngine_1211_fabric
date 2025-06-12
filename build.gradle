@@ -44,7 +44,12 @@ dependencies {
 	implementation fileTree(dir: 'lib', include: ['*.jar'])
 	modImplementation fileTree(dir: 'lib', include: ['*.jar'])
 
-	include files('lib/groovy-5.0.0-alpha-1.jar')
+	implementation files('lib/groovy-5.0.0-alpha-1.jar')
+
+	// Required ASM dependencies (for Groovy 5)
+	include 'org.ow2.asm:asm:9.5'
+	include 'org.ow2.asm:asm-tree:9.5'
+	include 'org.ow2.asm:asm-commons:9.5'
 
 	include(implementation "io.github.spair:imgui-java-binding:${project.imgui_version}")
 	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}")

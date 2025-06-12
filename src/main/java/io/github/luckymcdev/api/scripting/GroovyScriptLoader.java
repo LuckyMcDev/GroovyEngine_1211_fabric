@@ -8,6 +8,7 @@ import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.scripting.event.Events;
 import io.github.luckymcdev.api.scripting.gui.GuiBinding;
 import io.github.luckymcdev.api.scripting.input.KeysBinding;
+import io.github.luckymcdev.api.scripting.registry.ItemRegistrar;
 import io.github.luckymcdev.util.RegistryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -64,19 +65,9 @@ public class GroovyScriptLoader {
         // Per-script logger
         binding.setVariable("Logger", new GroovyLogger(scriptPath.getFileName().toString()));
 
-        // Registry helpers for Items and Blocks
-        binding.setVariable("ItemRegistryHelper", new RegistryHelper<Item>(Registries.ITEM, "groovyengine"));
-        binding.setVariable("BlockRegistryHelper", new RegistryHelper<Block>(Registries.BLOCK, "groovyengine"));
-
-        // Common Minecraft classes for scripting convenience
-        binding.setVariable("Item", Item.class);
-        binding.setVariable("Block", Block.class);
-        binding.setVariable("BlockSettings", Block.Settings.class);
-        binding.setVariable("FabricBlockSettings", net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings.class);
-        binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
-        binding.setVariable("Items", Registries.ITEM);
-        binding.setVariable("Blocks", Registries.BLOCK);
-        binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
+        RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, "groovyengine");
+        ItemRegistrar registrar = new ItemRegistrar(itemHelper);
+        binding.setVariable("ItemRegistrar", registrar);
 
         binding.setVariable("Events", Events.class);
 
@@ -86,25 +77,7 @@ public class GroovyScriptLoader {
 
 
         // Shared API context and utilities
-        binding.setVariable("ctx", new GroovyEngineContext());
-
-        // Register function for flexible registrations
-        binding.setVariable("register", new Closure<Object>(null) {
-            public Object call(String type, String id, Object obj) {
-                switch(type.toLowerCase()) {
-                    case "item":
-                        ((RegistryHelper<Item>) binding.getVariable("ItemRegistryHelper")).register(id, (Item)obj);
-                        break;
-                    case "block":
-                        ((RegistryHelper<Block>) binding.getVariable("BlockRegistryHelper")).register(id, (Block)obj);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown registration type: " + type);
-                }
-                GroovyEngine.LOGGER.info("[GroovyEngine] Registered " + type + ": " + id);
-                return obj;
-            }
-        });
+        binding.setVariable("GEctx", new GroovyEngineContext());
 
         binding.setVariable("create", new Closure<Object>(null) {
             public Object call(Object clazzObj, Object... args) {

@@ -1,7 +1,6 @@
 package io.github.luckymcdev.api.scripting.event;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -12,15 +11,24 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.Hand;
 
-public class RegisterEvents {
+public class EventRegistry {
 
     public static void init() {
+
+        //Blocks
         registerBlockBreak();
         registerBlockPlace();
+
+        //Player
         registerPlayerJoin();
         registerPlayerQuit();
+
+        //Tick
         registerServerTick();
         registerClientTick();
+
+        //Registry
+        registerItem();
     }
 
     private static void registerBlockBreak() {
@@ -84,5 +92,10 @@ public class RegisterEvents {
             EventContext ctx = new EventContext("clientTick");
             Events.trigger("clientTick", ctx);
         });
+    }
+
+    private static void registerItem() {
+        EventContext ctx = new EventContext("registerItem");
+        Events.trigger("registerItem", ctx);
     }
 }

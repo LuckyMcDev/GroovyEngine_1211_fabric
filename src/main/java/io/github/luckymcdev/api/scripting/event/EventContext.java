@@ -1,5 +1,6 @@
 package io.github.luckymcdev.api.scripting.event;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;

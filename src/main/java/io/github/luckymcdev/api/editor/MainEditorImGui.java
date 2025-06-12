@@ -26,20 +26,35 @@ public class MainEditorImGui {
             ImGui.begin("Console");
 
             for (String line : InMemoryLogAppender.getLogLines()) {
-                if (line.contains("ERROR")) {
-                    ImGui.textColored(1.0f, 0.25f, 0.25f, 1.0f, "X" + line);
-                } else if (line.contains("WARN")) {
-                    ImGui.textColored(1.0f, 0.75f, 0.2f, 1.0f, "! " + line);
-                } else if (line.contains("INFO")) {
-                    ImGui.textColored(0.6f, 0.8f, 1.0f, 1.0f, "i " + line);
-                } else if (line.contains("DEBUG")) {
-                    ImGui.textColored(0.5f, 1.0f, 0.5f, 1.0f, "D " + line);
-                } else if (line.contains("TRACE")) {
-                    ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "? " + line);
+                String[] parts = line.split("\\|", 3);
+                if (parts.length >= 3) {
+                    String level = parts[0].trim();
+                    String logger = parts[1].trim();
+                    String message = parts[2].trim();
+
+                    String shortLogger = logger.contains(".") ?
+                            logger.substring(logger.lastIndexOf('.') + 1) : logger;
+
+                    String formatted = String.format("%s | %s | %s", level, shortLogger, message);
+
+                    if (level.contains("ERROR")) {
+                        ImGui.textColored(1.0f, 0.25f, 0.25f, 1.0f, "X " + formatted);
+                    } else if (level.contains("WARN")) {
+                        ImGui.textColored(1.0f, 0.75f, 0.2f, 1.0f, "! " + formatted);
+                    } else if (level.contains("INFO")) {
+                        ImGui.textColored(0.6f, 0.8f, 1.0f, 1.0f, "i " + formatted);
+                    } else if (level.contains("DEBUG")) {
+                        ImGui.textColored(0.5f, 1.0f, 0.5f, 1.0f, "D " + formatted);
+                    } else if (level.contains("TRACE")) {
+                        ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "? " + formatted);
+                    } else {
+                        ImGui.text(line); // fallback
+                    }
                 } else {
-                    ImGui.text(line); // fallback
+                    ImGui.text(line); // malformed line fallback
                 }
             }
+
 
             if (ImGui.getScrollY() >= ImGui.getScrollMaxY()) {
                 ImGui.setScrollHereY(1.0f);

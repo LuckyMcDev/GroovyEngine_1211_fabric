@@ -3,12 +3,16 @@ package io.github.luckymcdev.api.scripting;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.GroovyShell;
+import imgui.ImGui;
 import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.scripting.event.Events;
+import io.github.luckymcdev.api.scripting.gui.GuiBinding;
+import io.github.luckymcdev.api.scripting.input.KeysBinding;
 import io.github.luckymcdev.util.RegistryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.MinecraftServer;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
@@ -70,11 +74,15 @@ public class GroovyScriptLoader {
         binding.setVariable("BlockSettings", Block.Settings.class);
         binding.setVariable("FabricBlockSettings", net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings.class);
         binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
-        binding.setVariable("Blocks", net.minecraft.block.Blocks.class);
+        binding.setVariable("Items", Registries.ITEM);
+        binding.setVariable("Blocks", Registries.BLOCK);
         binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
 
         binding.setVariable("Events", Events.class);
 
+        binding.setVariable("Keys", new KeysBinding());
+        binding.setVariable("Gui", new GuiBinding());
+        binding.setVariable("ImGui", new ImGui());
 
 
         // Shared API context and utilities

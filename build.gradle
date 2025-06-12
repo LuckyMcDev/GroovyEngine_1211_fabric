@@ -18,7 +18,9 @@ repositories {
 		url = "https://api.modrinth.com/maven"
 	}
 
-	maven { url 'https://maven.blamejared.com' }
+	flatDir {
+		dirs 'lib'
+	}
 }
 
 dependencies {
@@ -32,7 +34,7 @@ dependencies {
 
 
 	// Groovy (for scripting)
-	implementation "org.codehaus.groovy:groovy:${groovy_version}"
+
 
 	implementation "io.github.spair:imgui-java-binding:${project.imgui_version}"
 	implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}"

@@ -4,13 +4,13 @@ import io.github.luckymcdev.api.scripting.GroovyScriptLoader;
 import io.github.luckymcdev.api.scripting.event.EventContext;
 import io.github.luckymcdev.api.scripting.event.Events;
 import io.github.luckymcdev.api.scripting.event.EventRegistry;
-import io.github.luckymcdev.datapack.DatapackGenerator;
-import io.github.luckymcdev.datapack.DatapackSync;
 import io.github.luckymcdev.api.logging.LogCapture;
+import io.github.luckymcdev.generators.ResourcePackGenerator;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.resource.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,25 +37,14 @@ public class GroovyEngine implements ModInitializer {
 		System.out.println("Loading Scripts");
 		GroovyScriptLoader.initialize();
 
+		LOGGER.info("Generating ResourcePack");
+		ResourcePackGenerator.generateResourcePack();
+
 		Events.trigger("registerItem", new EventContext("registerItem"));
 		Events.trigger("registerBlock", new EventContext("registerBlock"));
 
 		// Initialize all other events like blockBreak, playerJoin etc.
 		EventRegistry.init();
-
-		Path configDir = FabricLoader.getInstance().getConfigDir();
-		try {
-			DatapackGenerator.generateDatapack(configDir, MODID);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			DatapackSync.syncDatapackToWorld(MODID, configDir);
-		});
-
-
-
 	}
 
 

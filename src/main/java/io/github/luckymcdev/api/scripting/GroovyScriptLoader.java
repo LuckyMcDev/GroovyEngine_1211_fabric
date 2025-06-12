@@ -8,12 +8,10 @@ import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.scripting.event.Events;
 import io.github.luckymcdev.api.scripting.gui.GuiBinding;
 import io.github.luckymcdev.api.scripting.input.KeysBinding;
-import io.github.luckymcdev.api.scripting.registry.ItemRegistrar;
+import io.github.luckymcdev.api.scripting.registry.ItemBuilder;
 import io.github.luckymcdev.util.RegistryHelper;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
-import net.minecraft.server.MinecraftServer;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
@@ -42,10 +40,11 @@ public class GroovyScriptLoader {
 
     private static void createFoldersIfNeeded() {
         try {
-            Files.createDirectories(ROOT.resolve("libs"));
             Files.createDirectories(ROOT.resolve("client"));
+            Files.createDirectories(ROOT.resolve("data"));
+            Files.createDirectories(ROOT.resolve("data/datapacks"));
+            Files.createDirectories(ROOT.resolve("data/resourcepacks"));
             Files.createDirectories(ROOT.resolve("server"));
-            Files.createDirectories(ROOT.resolve("shared"));
         } catch (IOException e) {
             GroovyEngine.LOGGER.error("[GroovyEngine] Failed to create script folders", e);
         }
@@ -65,9 +64,18 @@ public class GroovyScriptLoader {
         // Per-script logger
         binding.setVariable("Logger", new GroovyLogger(scriptPath.getFileName().toString()));
 
-        RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, "groovyengine");
-        ItemRegistrar registrar = new ItemRegistrar(itemHelper);
-        binding.setVariable("ItemRegistrar", registrar);
+        RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID);
+
+        // Expose the static register method wrapped as a closure
+        binding.setVariable("ItemBuilder", new Closure<Object>(null) {
+            public Object call(Object... args) {
+                if (args.length < 1) {
+                    throw new IllegalArgumentException("You must provide the item name.");
+                }
+                String name = args[0].toString();
+                return ItemBuilder.register(itemHelper, name);
+            }
+        });
 
         binding.setVariable("Events", Events.class);
 
@@ -75,9 +83,8 @@ public class GroovyScriptLoader {
         binding.setVariable("Gui", new GuiBinding());
         binding.setVariable("ImGui", new ImGui());
 
-
         // Shared API context and utilities
-        binding.setVariable("GEctx", new GroovyEngineContext());
+        binding.setVariable("GeUtils", new GroovyEngineScriptUtils());
 
         binding.setVariable("create", new Closure<Object>(null) {
             public Object call(Object clazzObj, Object... args) {
@@ -99,10 +106,6 @@ public class GroovyScriptLoader {
 
 
     public static void loadScripts() {
-        // Load shared libs first
-        runScriptsInFolder(ROOT.resolve("libs"));
-        runScriptsInFolder(ROOT.resolve("shared"));
-
         // Then load based on environment (client/server)
         EnvType env = FabricLoader.getInstance().getEnvironmentType();
 

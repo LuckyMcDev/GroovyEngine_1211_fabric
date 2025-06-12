@@ -18,6 +18,11 @@ repositories {
 		url = "https://api.modrinth.com/maven"
 	}
 
+	maven {
+		name = "BlameJared"
+		url = "https://maven.blamejared.com"
+	}
+
 	flatDir {
 		dirs 'lib'
 	}
@@ -31,6 +36,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// openloader for data and resourcepacks
+	modImplementation "net.darkhax.openloader:openloader-fabric-1.21.1:21.1.5"
 
 	// Groovy (for scripting)
 	implementation fileTree(dir: 'lib', include: ['*.jar'])

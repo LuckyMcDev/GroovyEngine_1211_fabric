@@ -3,6 +3,7 @@ package io.github.luckymcdev.generators;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.github.luckymcdev.GroovyEngine;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
@@ -41,4 +42,38 @@ public class ResourcePackDataGenerator {
             e.printStackTrace();
         }
     }
+
+    public static void generateBlockModel(String blockName, String texturePath) {
+        try {
+            Path modelsDir = RESOURCEPACK_PATH.resolve("assets/groovyengine/models/block");
+            Files.createDirectories(modelsDir);
+
+            JsonObject modelJson = new JsonObject();
+            modelJson.addProperty("parent", "block/cube_all");
+
+            JsonObject textures = new JsonObject();
+            textures.addProperty("all", texturePath);
+            modelJson.add("textures", textures);
+
+            Path modelFile = modelsDir.resolve(blockName + ".json");
+            Files.writeString(modelFile, GSON.toJson(modelJson));
+
+            // Also generate blockstate JSON
+            Path blockstateDir = RESOURCEPACK_PATH.resolve("assets/groovyengine/blockstates");
+            Files.createDirectories(blockstateDir);
+
+            JsonObject blockstateJson = new JsonObject();
+            JsonObject variants = new JsonObject();
+            JsonObject variantEntry = new JsonObject();
+            variantEntry.addProperty("model", GroovyEngine.MODID + ":block/" + blockName);
+            variants.add("", variantEntry);
+            blockstateJson.add("variants", variants);
+
+            Path blockstateFile = blockstateDir.resolve(blockName + ".json");
+            Files.writeString(blockstateFile, GSON.toJson(blockstateJson));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

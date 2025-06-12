@@ -8,15 +8,20 @@ import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.scripting.event.Events;
 import io.github.luckymcdev.api.scripting.gui.GuiBinding;
 import io.github.luckymcdev.api.scripting.input.KeysBinding;
+import io.github.luckymcdev.api.scripting.registry.BlockBuilder;
 import io.github.luckymcdev.api.scripting.registry.ItemBuilder;
 import io.github.luckymcdev.util.RegistryHelper;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.MinecraftServer;
+import org.codehaus.groovy.ant.Groovy;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.api.EnvType;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -77,6 +82,11 @@ public class GroovyScriptLoader {
             }
         });
 
+        RegistryHelper<Block> blockHelper = new RegistryHelper<>(Registries.BLOCK, GroovyEngine.MODID);
+        BlockBuilder.setSharedHelper(blockHelper);
+        binding.setVariable("BlockBuilder", BlockBuilder.class);
+
+
         binding.setVariable("Events", Events.class);
 
         binding.setVariable("Keys", new KeysBinding());
@@ -92,14 +102,12 @@ public class GroovyScriptLoader {
                     throw new IllegalArgumentException("First argument must be a Class");
                 }
                 try {
-                    return org.codehaus.groovy.runtime.InvokerHelper.invokeConstructorOf(clazz, args);
+                    return InvokerHelper.invokeConstructorOf(clazz, args);
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to instantiate " + clazz.getName(), e);
                 }
             }
         });
-
-
 
         return new GroovyShell(binding, createCompilerConfig());
     }

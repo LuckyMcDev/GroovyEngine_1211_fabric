@@ -2,10 +2,12 @@ package io.github.luckymcdev;
 
 import io.github.luckymcdev.api.editor.EditorState;
 import io.github.luckymcdev.api.editor.MainEditorImGui;
+import io.github.luckymcdev.api.editor.MainEditorScreen;
 import io.github.luckymcdev.api.input.keybinding.GroovyKeybinds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.text.Text;
 
 public class GroovyEngineClient implements ClientModInitializer {
     @Override
@@ -14,16 +16,9 @@ public class GroovyEngineClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (GroovyKeybinds.openMainEditorKey.wasPressed()) {
-                EditorState.open = !EditorState.open;
+                client.setScreen(new MainEditorScreen(Text.of("Main Editor")));
             }
 
         });
-
-        HudRenderCallback.EVENT.register((drawContext, delta) -> {
-            if (EditorState.open) {
-                MainEditorImGui.render();
-            }
-        });
-
     }
 }

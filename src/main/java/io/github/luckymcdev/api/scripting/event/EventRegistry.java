@@ -29,6 +29,7 @@ public class EventRegistry {
 
         //Registry
         registerItem();
+        registerBlock();
     }
 
     private static void registerBlockBreak() {
@@ -97,5 +98,10 @@ public class EventRegistry {
     private static void registerItem() {
         EventContext ctx = new EventContext("registerItem");
         Events.trigger("registerItem", ctx);
+    }
+
+    private static void registerBlock() {
+        EventContext ctx = new EventContext("registerBlock");
+        Events.trigger("registerBlock", ctx);
     }
 }

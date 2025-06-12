@@ -41,13 +41,24 @@ dependencies {
 	modImplementation "net.darkhax.openloader:openloader-fabric-1.21.1:21.1.5"
 
 	// Groovy (for scripting)
-	include( implementation fileTree(dir: 'lib', include: ['*.jar']) )
+	implementation fileTree(dir: 'lib', include: ['*.jar'])
+	modImplementation fileTree(dir: 'lib', include: ['*.jar'])
 
-	include( implementation "io.github.spair:imgui-java-binding:${project.imgui_version}" )
-	include( implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}" )
+	include files('lib/groovy-5.0.0-alpha-1.jar')
 
-	include( implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}" )
+	include(implementation "io.github.spair:imgui-java-binding:${project.imgui_version}")
+	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}")
 
+	include(implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
+
+}
+
+configurations.all {
+	resolutionStrategy {
+		// Force Gradle to accept local JARs without module metadata
+		failOnNonReproducibleResolution()
+		force 'org.codehaus.groovy:groovy:5.0.0-alpha-1'
+	}
 }
 
 processResources {

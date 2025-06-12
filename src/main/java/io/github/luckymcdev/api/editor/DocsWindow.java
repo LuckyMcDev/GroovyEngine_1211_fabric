@@ -4,68 +4,82 @@ import imgui.ImGui;
 
 public class DocsWindow {
     public static void render() {
+
         ImGui.begin("GroovyEngine Scripting Docs");
 
         if (ImGui.treeNode("== Getting Started ==")) {
             ImGui.textWrapped("GroovyEngine lets you script Minecraft behavior using Groovy.");
-            ImGui.textWrapped("Scripts are loaded from the 'GroovyEngine' folder in your .minecraft directory.");
-            ImGui.textWrapped("To react to events or create new blocks/items, you use the bindings listed below.");
+            ImGui.textWrapped("Scripts are loaded from the '.minecraft/GroovyEngine' directory.");
+            ImGui.textWrapped("Use powerful helpers to register items, blocks, events, and more.");
             ImGui.treePop();
         }
 
-        if (ImGui.treeNode("-- Bindings & Helpers --")) {
+        if (ImGui.treeNode("-- Scripting API & Bindings --")) {
             ImGui.textColored(0.8f, 0.9f, 1f, 1f, "Core Scripting Functions:");
 
             if (ImGui.treeNode(" Events.on(eventName, callback)")) {
                 ImGui.textWrapped("Register a callback for a specific event.");
                 ImGui.separator();
                 ImGui.textColored(0.7f, 1f, 0.7f, 1f, "Example:");
-                ImGui.textWrapped("Events.on(\"blockBreak\", { ctx ->\n    Logger.info(\"Block broken: ${ctx.block}\")\n})");
-                ImGui.treePop();
-            }
-
-            if (ImGui.treeNode(" register(type, id, object)")) {
-                ImGui.textWrapped("Register a block, item, or other game object.");
-                ImGui.separator();
-                ImGui.textColored(0.7f, 1f, 0.7f, 1f, "Example:");
-                ImGui.textWrapped("register(\"item\", \"my_mod:banana\", create(Item.class, new Item.Settings()))");
-                ImGui.treePop();
-            }
-
-            if (ImGui.treeNode(" create(Class, ...args)")) {
-                ImGui.textWrapped("Construct a Java object dynamically.");
-                ImGui.separator();
-                ImGui.textColored(0.7f, 1f, 0.7f, 1f, "Example:");
-                ImGui.textWrapped("create(Block.class, Block.Settings.of(Material.STONE))");
+                ImGui.textWrapped("""
+                    Events.on("blockBreak", { ctx ->
+                        Logger.info("Block broken: " + ctx.block)
+                    })
+                """);
                 ImGui.treePop();
             }
 
             ImGui.treePop();
         }
 
-        if (ImGui.treeNode("-- Available Bindings --")) {
+        if (ImGui.treeNode("-- Builders --")) {
+            if (ImGui.treeNode(" ItemBuilder(name)")) {
+                ImGui.textWrapped("Registers an item with display name:");
+                ImGui.textWrapped("""
+                    ItemBuilder("banana")
+                        .displayName("Banana")
+                        .build()
+                """);
+                ImGui.textWrapped("The Texture is the default location inside the resourcepack located in the data folder");
+                ImGui.treePop();
+            }
+
+            if (ImGui.treeNode(" BlockBuilder(name)")) {
+                ImGui.textWrapped("Registers a block with display name:");
+                ImGui.textWrapped("""
+                    BlockBuilder("test_block")
+                        .displayName("Test Block")
+                        .build()
+                """);
+                ImGui.treePop();
+            }
+
+            ImGui.treePop();
+        }
+
+        if (ImGui.treeNode("-- Available Globals --")) {
             ImGui.text("These objects are available to all scripts:");
-            ImGui.bulletText("- Logger - Log messages to console");
-            ImGui.bulletText("- ItemRegistryHelper - Register items");
-            ImGui.bulletText("- BlockRegistryHelper - Register blocks");
-            ImGui.bulletText("- Item, Block, Identifier - Core Minecraft classes");
-            ImGui.bulletText("- BlockSettings, FabricBlockSettings - Builders for blocks");
+            ImGui.bulletText("- Logger: log info, warn, or error");
+            ImGui.bulletText("- Events: hook into game events");
+            ImGui.bulletText("- ItemBuilder, BlockBuilder: build items and blocks easily");
+            ImGui.bulletText("- Minecraft classes (e.g., Item, Block, Identifier)");
             ImGui.treePop();
         }
 
         if (ImGui.treeNode("-- Event Names --")) {
-            ImGui.text("Events you can listen to:");
-            ImGui.bulletText("- clientTick - Every client tick");
-            ImGui.bulletText("- serverTick - Every server tick");
-            ImGui.bulletText("- blockBreak - When a player breaks a block");
-            ImGui.bulletText("- blockPlace:<id> - When a specific block is placed");
-            ImGui.bulletText("- playerJoin - When a player joins");
-            ImGui.bulletText("- playerLeave - When a player leaves");
+            ImGui.text("Supported event hooks:");
+            ImGui.bulletText("- clientTick");
+            ImGui.bulletText("- serverTick");
+            ImGui.bulletText("- playerJoin / playerLeave");
+            ImGui.bulletText("- blockBreak");
+            ImGui.bulletText("- blockPlace:<id>");
+            ImGui.bulletText("- registerItem");
+            ImGui.bulletText("- registerBlock !--currently broken--!");
             ImGui.treePop();
         }
 
         if (ImGui.treeNode("-- Example Script --")) {
-            ImGui.text("This script logs a welcome message when a player joins:");
+            ImGui.text("A complete example using Events and Logger:");
             ImGui.separator();
             ImGui.textWrapped("""
                 Events.on("playerJoin", { ctx ->

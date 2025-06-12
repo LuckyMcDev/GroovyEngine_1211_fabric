@@ -22,6 +22,8 @@ public class MainEditorImGui {
         }
 
         ImGuiImpl.draw(io -> {
+            ImGui.pushFont(ImGuiImpl.getDefaultFont());
+
             renderMenuBar();
 
             GuiRegistry.renderAll();
@@ -30,6 +32,8 @@ public class MainEditorImGui {
             if (showScripts) ScriptBrowserWindow.render();
             if (showDocs) DocsWindow.render();
             if (showBlockBrowser) BlockDisplayBrowserWindow.render();
+
+            ImGui.popFont();
         });
     }
 

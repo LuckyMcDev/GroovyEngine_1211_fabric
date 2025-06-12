@@ -6,16 +6,23 @@ import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import org.apache.commons.compress.utils.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ImGuiImpl {
     private final static ImGuiImplGlfw imGuiImplGlfw = new ImGuiImplGlfw();
     private final static ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
+
+    private static ImFont defaultFont;
+
 
     public static ImGuiIO getIO() {
         return ImGui.getIO();
@@ -29,11 +36,45 @@ public class ImGuiImpl {
         data.setIniFilename("groovyengine.ini");
         data.setFontGlobalScale(1F);
 
+        {
+            final ImFontAtlas fonts = data.getFonts();
+            final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder();
+
+            // Add all required glyph sets
+            rangesBuilder.addRanges(fonts.getGlyphRangesDefault());
+            rangesBuilder.addRanges(fonts.getGlyphRangesCyrillic());
+            rangesBuilder.addRanges(fonts.getGlyphRangesJapanese());
+            short[] glyphRanges = rangesBuilder.buildRanges();
+
+            try {
+                // Load font TTF from your mod's resources
+                byte[] fontData = IOUtils.toByteArray(Objects.requireNonNull(
+                        ImGuiImpl.class.getResourceAsStream("/assets/groovyengine/fonts/JetBrainsMonoNerdFont-Bold.ttf")));
+
+                ImFontConfig config = new ImFontConfig();
+                config.setGlyphRanges(glyphRanges);
+                config.setName("JetBrains Mono Nerd font bold");
+
+                fonts.addFontFromMemoryTTF(fontData, 16f, config);
+                defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, config);
+                fonts.build();
+
+                config.destroy();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+       }
+
         data.setConfigFlags(ImGuiConfigFlags.DockingEnable);
 
         imGuiImplGlfw.init(handle, true);
         imGuiImplGl3.init();
     }
+
+    public static ImFont getDefaultFont() {
+        return defaultFont;
+    }
+
 
     public static void draw(final RenderInterface runnable) {
 

@@ -1,4 +1,4 @@
-package io.github.luckymcdev.api.scripting.exposed;
+package io.github.luckymcdev.api.scripting;
 
 
 import io.github.luckymcdev.GroovyEngine;

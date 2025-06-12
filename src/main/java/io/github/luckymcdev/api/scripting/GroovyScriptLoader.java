@@ -4,9 +4,8 @@ import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.GroovyShell;
 import io.github.luckymcdev.GroovyEngine;
-import io.github.luckymcdev.api.RegistryHelper;
-import io.github.luckymcdev.api.scripting.exposed.GroovyEngineContext;
-import io.github.luckymcdev.api.scripting.exposed.GroovyLogger;
+import io.github.luckymcdev.api.scripting.event.Events;
+import io.github.luckymcdev.util.RegistryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -28,6 +27,12 @@ public class GroovyScriptLoader {
     public static void initialize() {
         createFoldersIfNeeded();
         loadScripts();
+
+        ScriptWatcher.startWatching(ROOT, () -> {
+            GroovyEngine.LOGGER.info("[GroovyEngine] Reloading scripts due to file change...");
+            Events.clear(); // Clear old listeners before reloading
+            loadScripts();
+        });
     }
 
     private static void createFoldersIfNeeded() {
@@ -67,6 +72,8 @@ public class GroovyScriptLoader {
         binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
         binding.setVariable("Blocks", net.minecraft.block.Blocks.class);
         binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
+
+        binding.setVariable("Events", Events.class);
 
 
 

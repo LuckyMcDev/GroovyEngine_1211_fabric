@@ -2,6 +2,7 @@ package io.github.luckymcdev;
 
 import com.mojang.brigadier.ParseResults;
 import io.github.luckymcdev.api.scripting.GroovyScriptLoader;
+import io.github.luckymcdev.api.scripting.event.RegisterEvents;
 import io.github.luckymcdev.datapack.DatapackGenerator;
 import io.github.luckymcdev.datapack.DatapackSync;
 import io.github.luckymcdev.api.logging.LogCapture;
@@ -33,11 +34,10 @@ public class GroovyEngine implements ModInitializer {
 
 		LOGGER.info("Hello Fabric world!");
 
-
-
 		System.out.println("Loading Scripts");
 		GroovyScriptLoader.initialize();
 
+		RegisterEvents.init();
 
 		Path configDir = FabricLoader.getInstance().getConfigDir();
 		try {
@@ -48,19 +48,9 @@ public class GroovyEngine implements ModInitializer {
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			DatapackSync.syncDatapackToWorld(MODID, configDir);
-
-			ServerCommandSource source = server.getCommandSource();
-			String command = "/reload";
-
-			// Get the command dispatcher
-			var dispatcher = server.getCommandManager().getDispatcher();
-
-			// Parse the command
-			ParseResults<ServerCommandSource> parseResults = dispatcher.parse(command, source);
-
-			// Execute the command
-			server.getCommandManager().execute(parseResults, command);
 		});
+
+
 
 	}
 

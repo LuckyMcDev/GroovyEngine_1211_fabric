@@ -29,7 +29,7 @@ public class ImGuiImpl {
         data.setIniFilename("groovyengine.ini");
         data.setFontGlobalScale(1F);
 
-        data.setConfigFlags(ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable);
+        data.setConfigFlags(ImGuiConfigFlags.DockingEnable);
 
         imGuiImplGlfw.init(handle, true);
         imGuiImplGl3.init();
@@ -48,15 +48,6 @@ public class ImGuiImpl {
         // end frame
         ImGui.render();
         imGuiImplGl3.renderDrawData(ImGui.getDrawData());
-
-        // Add this code if you have enabled Viewports in the create method
-        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-            final long pointer = GLFW.glfwGetCurrentContext();
-            ImGui.updatePlatformWindows();
-            ImGui.renderPlatformWindowsDefault();
-
-            GLFW.glfwMakeContextCurrent(pointer);
-        }
     }
 
     public static void dispose() {

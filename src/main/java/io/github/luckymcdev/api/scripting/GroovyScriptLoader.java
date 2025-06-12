@@ -96,19 +96,6 @@ public class GroovyScriptLoader {
         // Shared API context and utilities
         binding.setVariable("GeUtils", new GroovyEngineScriptUtils());
 
-        binding.setVariable("create", new Closure<Object>(null) {
-            public Object call(Object clazzObj, Object... args) {
-                if (!(clazzObj instanceof Class<?> clazz)) {
-                    throw new IllegalArgumentException("First argument must be a Class");
-                }
-                try {
-                    return InvokerHelper.invokeConstructorOf(clazz, args);
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed to instantiate " + clazz.getName(), e);
-                }
-            }
-        });
-
         return new GroovyShell(binding, createCompilerConfig());
     }
 

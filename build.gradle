@@ -12,6 +12,11 @@ base {
 
 repositories {
 	mavenCentral()
+
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
 }
 
 dependencies {
@@ -31,6 +36,9 @@ dependencies {
 	implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}"
 
 	implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}"
+
+	modImplementation "maven.modrinth:paxi:${project.paxi_version}"
+	modImplementation "maven.modrinth:yungs-api:${project.yungsapi_version}"
 	
 }
 

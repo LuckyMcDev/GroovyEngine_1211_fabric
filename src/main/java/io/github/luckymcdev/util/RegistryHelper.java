@@ -1,4 +1,4 @@
-package io.github.luckymcdev.api;
+package io.github.luckymcdev.util;
 
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;

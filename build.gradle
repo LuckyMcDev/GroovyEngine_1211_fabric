@@ -40,16 +40,11 @@ dependencies {
 	// openloader for data and resourcepacks
 	modImplementation "net.darkhax.openloader:openloader-fabric-1.21.1:21.1.5"
 
+	//include( implementation files('lib/groovy-5.0.0-alpha-1.jar') )
 	// Groovy (for scripting)
 	implementation fileTree(dir: 'lib', include: ['*.jar'])
-	modImplementation fileTree(dir: 'lib', include: ['*.jar'])
 
-	implementation files('lib/groovy-5.0.0-alpha-1.jar')
 
-	// Required ASM dependencies (for Groovy 5)
-	include 'org.ow2.asm:asm:9.5'
-	include 'org.ow2.asm:asm-tree:9.5'
-	include 'org.ow2.asm:asm-commons:9.5'
 
 	include(implementation "io.github.spair:imgui-java-binding:${project.imgui_version}")
 	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}")

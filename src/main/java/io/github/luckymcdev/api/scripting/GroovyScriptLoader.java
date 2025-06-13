@@ -1,8 +1,6 @@
 package io.github.luckymcdev.api.scripting;
 
-import groovy.lang.Binding;
-import groovy.lang.Closure;
-import groovy.lang.GroovyShell;
+import groovy.lang.*;
 import imgui.ImGui;
 import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.scripting.event.Events;
@@ -11,22 +9,27 @@ import io.github.luckymcdev.api.scripting.input.KeysBinding;
 import io.github.luckymcdev.api.scripting.registry.BlockBuilder;
 import io.github.luckymcdev.api.scripting.registry.ItemBuilder;
 import io.github.luckymcdev.util.RegistryHelper;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
-import org.codehaus.groovy.ant.Groovy;
+
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
-
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.api.EnvType;
-import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.util.List;
+import java.util.UUID;
 
 public class GroovyScriptLoader {
 
@@ -38,7 +41,7 @@ public class GroovyScriptLoader {
 
         ScriptWatcher.startWatching(ROOT, () -> {
             GroovyEngine.LOGGER.info("[GroovyEngine] Reloading scripts due to file change...");
-            Events.clear(); // Clear old listeners before reloading
+            Events.clear();
             loadScripts();
         });
     }
@@ -57,9 +60,78 @@ public class GroovyScriptLoader {
 
     private static CompilerConfiguration createCompilerConfig() {
         CompilerConfiguration config = new CompilerConfiguration();
-        ImportCustomizer imports = new ImportCustomizer();
 
+        // Basic allowed imports
+        ImportCustomizer imports = new ImportCustomizer();
+        imports.addStarImports(
+                "java.lang",
+                "java.util",
+                "net.minecraft",
+                "net.minecraft.util",
+                "net.minecraft.item",
+                "net.minecraft.block",
+                "net.minecraft.entity",
+                "net.minecraft.text",
+                "com.mojang.brigadier"
+        );
         config.addCompilationCustomizers(imports);
+
+        // Security customizer: allow only what we know is safe
+        SecureASTCustomizer secure = new SecureASTCustomizer();
+        secure.setClosuresAllowed(true);
+        secure.setMethodDefinitionAllowed(true);
+
+        // Expressions we allow
+        secure.setImportsWhitelist(List.of());
+        secure.setStaticImportsWhitelist(List.of());
+        secure.setStarImportsWhitelist(List.of(
+                "java.lang",
+                "java.util",
+                "java.math",
+                "net.minecraft",
+                "net.minecraft.util",
+                "net.minecraft.block",
+                "net.minecraft.item",
+                "net.minecraft.entity",
+                "net.minecraft.text",
+                "com.mojang.brigadier"
+        ));
+
+        secure.setImportsBlacklist(List.of(
+                "java.io.*",
+                "java.nio.*",
+                "java.net.*",
+                "javax.*",
+                "sun.*",
+                "com.sun.*",
+                "jdk.*",
+                "org.objectweb.*",
+                "org.spongepowered.*"
+        ));
+
+        secure.setStaticImportsBlacklist(List.of());
+        secure.setStarImportsBlacklist(List.of(
+                "java.io",
+                "java.net",
+                "javax",
+                "sun",
+                "com.sun",
+                "jdk",
+                "org.objectweb",
+                "org.spongepowered"
+        ));
+
+        // Optional: block access to dangerous receiver classes
+        secure.setReceiversBlackList(List.of(
+                "System", "Runtime", "ProcessBuilder", "Thread", "Class", "ClassLoader"
+        ));
+
+        // Disallow AST-level unsafe expressions
+        secure.setPackageAllowed(true);
+        secure.setIndirectImportCheckEnabled(true);
+
+        config.addCompilationCustomizers(secure);
+
         return config;
     }
 
@@ -69,9 +141,8 @@ public class GroovyScriptLoader {
         // Per-script logger
         binding.setVariable("Logger", new GroovyLogger(scriptPath.getFileName().toString()));
 
+        // Register items and blocks
         RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID);
-
-        // Expose the static register method wrapped as a closure
         binding.setVariable("ItemBuilder", new Closure<Object>(null) {
             public Object call(Object... args) {
                 if (args.length < 1) {
@@ -86,24 +157,25 @@ public class GroovyScriptLoader {
         BlockBuilder.setSharedHelper(blockHelper);
         binding.setVariable("BlockBuilder", BlockBuilder.class);
 
-
+        // Events & UI
         binding.setVariable("Events", Events.class);
-
         binding.setVariable("Keys", new KeysBinding());
         binding.setVariable("Gui", new GuiBinding());
         binding.setVariable("ImGui", new ImGui());
 
-        // Shared API context and utilities
+        // Utilities
         binding.setVariable("GeUtils", new GroovyEngineScriptUtils());
+
+        // Frequently used classes
+        binding.setVariable("UUID", UUID.class);
+        binding.setVariable("Duration", Duration.class);
+        binding.setVariable("Math", Math.class);
 
         return new GroovyShell(binding, createCompilerConfig());
     }
 
-
     public static void loadScripts() {
-        // Then load based on environment (client/server)
         EnvType env = FabricLoader.getInstance().getEnvironmentType();
-
         if (env == EnvType.CLIENT) {
             runScriptsInFolder(ROOT.resolve("client"));
         } else {
@@ -137,5 +209,4 @@ public class GroovyScriptLoader {
             GroovyEngine.LOGGER.error("[GroovyEngine] Failed to read scripts from folder: " + folder.toAbsolutePath(), e);
         }
     }
-
 }

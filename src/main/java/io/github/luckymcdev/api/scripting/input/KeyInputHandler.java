@@ -1,11 +1,13 @@
 package io.github.luckymcdev.api.scripting.input;
 
+import io.github.luckymcdev.GroovyEngine;
 import io.github.luckymcdev.api.scripting.event.Events;
 import groovy.lang.Closure;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import org.codehaus.groovy.ant.Groovy;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -37,7 +39,7 @@ public class KeyInputHandler {
                     try {
                         callback.call();
                     } catch (Exception e) {
-                        // Log or ignore
+                        e.printStackTrace();
                     }
                 }
 

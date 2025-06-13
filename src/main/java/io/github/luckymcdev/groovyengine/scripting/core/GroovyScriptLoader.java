@@ -4,6 +4,7 @@ import groovy.lang.*;
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
 import io.github.luckymcdev.groovyengine.event.Events;
+import io.github.luckymcdev.groovyengine.scripting.registry.RecipeBuilder;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyLogger;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiBinding;
@@ -81,23 +82,7 @@ public class GroovyScriptLoader {
         secure.setClosuresAllowed(true);
         secure.setMethodDefinitionAllowed(true);
 
-        // Expressions we allow
-        secure.setImportsWhitelist(List.of());
-        secure.setStaticImportsWhitelist(List.of());
-        secure.setStarImportsWhitelist(List.of(
-                "java.lang",
-                "java.util",
-                "java.math",
-                "net.minecraft",
-                "net.minecraft.util",
-                "net.minecraft.block",
-                "net.minecraft.item",
-                "net.minecraft.entity",
-                "net.minecraft.text",
-                "com.mojang.brigadier"
-        ));
-
-        secure.setImportsBlacklist(List.of(
+        secure.setDisallowedImports(List.of(
                 "java.io.*",
                 "java.nio.*",
                 "java.net.*",
@@ -109,8 +94,8 @@ public class GroovyScriptLoader {
                 "org.spongepowered.*"
         ));
 
-        secure.setStaticImportsBlacklist(List.of());
-        secure.setStarImportsBlacklist(List.of(
+        secure.setDisallowedStaticImports(List.of());
+        secure.setDisallowedStarImports(List.of(
                 "java.io",
                 "java.net",
                 "javax",
@@ -122,7 +107,7 @@ public class GroovyScriptLoader {
         ));
 
         // Optional: block access to dangerous receiver classes
-        secure.setReceiversBlackList(List.of(
+        secure.setDisallowedReceivers(List.of(
                 "System", "Runtime", "ProcessBuilder", "Thread", "Class", "ClassLoader"
         ));
 
@@ -156,6 +141,9 @@ public class GroovyScriptLoader {
         RegistryHelper<Block> blockHelper = new RegistryHelper<>(Registries.BLOCK, GroovyEngine.MODID);
         BlockBuilder.setSharedHelper(blockHelper);
         binding.setVariable("BlockBuilder", BlockBuilder.class);
+
+        // Recipes (add this line)
+        binding.setVariable("RecipeBuilder", RecipeBuilder.class); // Bind the class directly
 
         // Events & UI
         binding.setVariable("Events", Events.class);

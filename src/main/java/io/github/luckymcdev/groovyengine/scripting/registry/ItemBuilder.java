@@ -1,8 +1,8 @@
 package io.github.luckymcdev.groovyengine.scripting.registry;
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.generators.LangGenerator;
-import io.github.luckymcdev.groovyengine.generators.ResourcePackDataGenerator;
+import io.github.luckymcdev.groovyengine.generators.datagen.LangGenerator;
+import io.github.luckymcdev.groovyengine.generators.datagen.ResourcePackDataGenerator;
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
 import net.minecraft.item.Item;
 

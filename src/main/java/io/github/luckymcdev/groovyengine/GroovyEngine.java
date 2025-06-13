@@ -1,11 +1,13 @@
 package io.github.luckymcdev.groovyengine;
 
+import io.github.luckymcdev.groovyengine.generators.structure.DatapackGenerator;
+import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
+import io.github.luckymcdev.groovyengine.generators.structure.ResourcepackGenerator;
 import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptLoader;
 import io.github.luckymcdev.groovyengine.event.EventContext;
 import io.github.luckymcdev.groovyengine.event.Events;
 import io.github.luckymcdev.groovyengine.event.EventRegistry;
 import io.github.luckymcdev.groovyengine.logging.LogCapture;
-import io.github.luckymcdev.groovyengine.generators.ResourcePackGenerator;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -26,11 +28,10 @@ public class GroovyEngine implements ModInitializer {
 		// Proceed with mild caution.
 		LogCapture.hookLog4j();
 
-		LOGGER.info("Generating ResourcePack");
-		ResourcePackGenerator.generateResourcePack();
-
-		LOGGER.info("Generating Datapack");
-
+		LOGGER.info("Generating Pack Structure");
+		GroovyEnginePackRootGenerator.generate();
+		ResourcepackGenerator.generate();
+		DatapackGenerator.generate();
 
 		System.out.println("Loading Scripts");
 		GroovyScriptLoader.initialize();

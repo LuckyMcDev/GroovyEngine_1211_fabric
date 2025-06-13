@@ -1,12 +1,15 @@
 package io.github.luckymcdev.groovyengine.scripting.registry;
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.generators.LangGenerator;
-import io.github.luckymcdev.groovyengine.generators.ResourcePackDataGenerator;
+import io.github.luckymcdev.groovyengine.generators.datagen.LangGenerator;
+import io.github.luckymcdev.groovyengine.generators.datagen.ResourcePackDataGenerator;
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 
 public class BlockBuilder {
     private final RegistryHelper<Block> registry;
@@ -59,6 +62,11 @@ public class BlockBuilder {
         if (block == null) {
             block = new Block(settings);
             registry.register(name, block);
+
+            // Create and register a BlockItem
+            Item.Settings itemSettings = new Item.Settings(); // You might want to allow this to be configurable too
+            BlockItem blockItem = new BlockItem(block, itemSettings);
+            new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID).register(name, blockItem); // Register the item with the same name
 
             // Lang entry
             if (displayName != null) {

@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.mixin.editor.imgui;
+package io.github.luckymcdev.groovyengine.mixin.imgui;
 
 import io.github.luckymcdev.groovyengine.imgui.ImGuiImpl;
 import net.minecraft.client.MinecraftClient;

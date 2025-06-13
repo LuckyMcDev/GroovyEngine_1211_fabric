@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.editor.windows;
 
 import imgui.ImGui;
+import io.github.luckymcdev.groovyengine.GroovyEngine;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class ScriptBrowserWindow {
                     .forEach(path -> {
                         String relativePath = scriptsRoot.relativize(path).toString();
                         if (ImGui.selectable(relativePath)) {
-                            ScriptEditor.openScript(path);
+                            GroovyEngine.LOGGER.info("open the thing");
                         }
                     });
         } catch (IOException e) {

@@ -16,10 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"io.github.luckymcdev.GroovyEngine"
+          "io.github.luckymcdev.groovyengine.GroovyEngine"
 		],
 		"client": [
-			"io.github.luckymcdev.GroovyEngineClient"
+          "io.github.luckymcdev.groovyengine.GroovyEngineClient"
 		]
 	},
 	"mixins": [

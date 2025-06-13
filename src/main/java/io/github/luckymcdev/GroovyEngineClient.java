@@ -25,6 +25,10 @@ public class GroovyEngineClient implements ClientModInitializer {
 
         });
 
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+            MainEditorImGui.render();
+        });
+
         EventRegistry.initClient();
     }
 }

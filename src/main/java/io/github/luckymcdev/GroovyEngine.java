@@ -32,13 +32,15 @@ public class GroovyEngine implements ModInitializer {
 		// Proceed with mild caution.
 		LogCapture.hookLog4j();
 
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("Generating ResourcePack");
+		ResourcePackGenerator.generateResourcePack();
+
+		LOGGER.info("Generating Datapack");
+
 
 		System.out.println("Loading Scripts");
 		GroovyScriptLoader.initialize();
 
-		LOGGER.info("Generating ResourcePack");
-		ResourcePackGenerator.generateResourcePack();
 
 		Events.trigger("registerItem", new EventContext("registerItem"));
 		Events.trigger("registerBlock", new EventContext("registerBlock"));

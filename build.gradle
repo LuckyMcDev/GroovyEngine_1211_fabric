@@ -47,18 +47,12 @@ dependencies {
 
 
 	include(implementation "io.github.spair:imgui-java-binding:${project.imgui_version}")
-	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}")
+	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}") {
+		exclude group: 'org.lwjgl'
+	}
 
 	include(implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
 
-}
-
-configurations.all {
-	resolutionStrategy {
-		// Force Gradle to accept local JARs without module metadata
-		failOnNonReproducibleResolution()
-		force 'org.codehaus.groovy:groovy:5.0.0-alpha-1'
-	}
 }
 
 processResources {

@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents; // For entity death
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -14,14 +13,12 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.Hand;
-import net.minecraft.entity.LivingEntity; // For entity death events
-import net.minecraft.entity.damage.DamageSource; // For entity death events
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 public class EventRegistry {
 
     public static void initServer() {
-        // Clear all listeners from previous reloads/initializations to prevent duplicates
         clearAllEvents();
 
         registerBlockBreak();
@@ -29,30 +26,20 @@ public class EventRegistry {
         registerPlayerJoin();
         registerPlayerQuit();
         registerServerTick();
-        registerPlayerInteractItem(); // New event
-        registerEntityDeath(); // New event
+        registerPlayerInteractItem();
+        registerEntityDeath();
 
-        // Consider if "registerItem" and "registerBlock" should be actual events or direct API calls.
-        // As events that fire on init, they're handled here:
         fireRegisterItemEvent();
         fireRegisterBlockEvent();
     }
 
     public static void initClient() {
-        // Clear all listeners from previous reloads/initializations to prevent duplicates
         clearAllEvents();
 
         registerClientTick();
-        // Consider if "registerItem" and "registerBlock" should be actual events or direct API calls.
-        fireRegisterItemEvent();
-        fireRegisterBlockEvent();
+        fireRegisterShaderEvent();
     }
 
-    /**
-     * Clears all listeners from all custom event classes.
-     * Call this before initializing events (e.g., on server start or data pack reload)
-     * to prevent listeners from being registered multiple times.
-     */
     public static void clearAllEvents() {
         GroovyClientTickEvents.clear();
         GroovyServerTickEvents.clear();
@@ -62,22 +49,24 @@ public class EventRegistry {
         GroovyPlayerLeaveEvents.clear();
         GroovyPlayerInteractItemEvents.clear();
         GroovyEntityDeathEvents.clear();
-        // Add all your new event classes here
+        GroovyRegisterItemEvents.clear();
+        GroovyRegisterBlockEvents.clear();
+        GroovyShaderEvents.clear(); // Clear shader events
     }
 
     // --- SERVER EVENTS ---
 
     private static void registerBlockBreak() {
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
-            if (!world.isClient()) { // Ensure it's server-side
+            if (!world.isClient()) {
                 BlockState state = world.getBlockState(pos);
                 EventContext ctx = new EventContext("blockBreak")
                         .withPlayer(player)
-                        .withWorld((ServerWorld) world) // Cast to ServerWorld is safe on server
+                        .withWorld((ServerWorld) world)
                         .withPos(pos)
                         .withBlock(state)
-                        .withHand(hand); // Add hand context
-                GroovyBlockBreakEvents.fire(ctx); // Fire to the specific event class
+                        .withHand(hand);
+                GroovyBlockBreakEvents.fire(ctx);
             }
             return ActionResult.PASS;
         });
@@ -85,9 +74,6 @@ public class EventRegistry {
 
     private static void registerBlockPlace() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            // Check for !world.isClient() and !player.isSneaking() with Hand.MAIN_HAND to prevent double-firing
-            // or accidental client-side calls depending on your needs.
-            // Simplified for example:
             if (!world.isClient()) {
                 BlockPos pos = hitResult.getBlockPos();
                 BlockState state = world.getBlockState(pos);
@@ -97,7 +83,7 @@ public class EventRegistry {
                         .withPos(pos)
                         .withBlock(state)
                         .withHand(hand);
-                GroovyBlockBreakEvents.fire(ctx); // Fire to the specific event class
+                GroovyBlockPlaceEvents.fire(ctx); // Fixed to block place events
             }
             return ActionResult.PASS;
         });
@@ -108,7 +94,7 @@ public class EventRegistry {
             EventContext ctx = new EventContext("playerJoin")
                     .withPlayer(handler.player)
                     .withWorld(handler.player.getServerWorld());
-            GroovyBlockBreakEvents.fire(ctx); // Fire to the specific event class
+            GroovyPlayerJoinEvents.fire(ctx);
         });
     }
 
@@ -117,20 +103,19 @@ public class EventRegistry {
             EventContext ctx = new EventContext("playerQuit")
                     .withPlayer(handler.player)
                     .withWorld(handler.player.getServerWorld());
-            GroovyBlockBreakEvents.fire(ctx); // Fire to the specific event class
+            GroovyPlayerLeaveEvents.fire(ctx);
         });
     }
 
     private static void registerServerTick() {
         ServerTickEvents.START_SERVER_TICK.register((MinecraftServer server) -> {
             EventContext ctx = new EventContext("serverTick");
-            GroovyServerTickEvents.fire(ctx); // Fire to the specific event class
+            GroovyServerTickEvents.fire(ctx);
         });
     }
 
     private static void registerPlayerInteractItem() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            // FIX: UseItemCallback requires TypedActionResult<ItemStack>
             if (!world.isClient()) {
                 EventContext ctx = new EventContext("playerInteractItem")
                         .withPlayer(player)
@@ -138,31 +123,28 @@ public class EventRegistry {
                         .withHand(hand);
                 GroovyPlayerInteractItemEvents.fire(ctx);
             }
-            // Return the current stack, indicating no change to it.
             return TypedActionResult.pass(player.getStackInHand(hand));
         });
     }
 
     private static void registerEntityDeath() {
-        // FIX: Using LivingEntityEvents.AFTER_DEATH for cleaner entity death detection
         ServerLivingEntityEvents.AFTER_DEATH.register((livingEntity, damageSource) -> {
-            World world = livingEntity.getWorld(); // Get world from the entity
-            if (!world.isClient()) { // Ensure it's server-side
+            World world = livingEntity.getWorld();
+            if (!world.isClient()) {
                 EventContext ctx = new EventContext("entityDeath")
                         .withEntity(livingEntity)
-                        .withWorld((ServerWorld) world); // Safe cast on server
+                        .withWorld((ServerWorld) world);
                 GroovyEntityDeathEvents.fire(ctx);
             }
         });
     }
-
 
     // --- CLIENT EVENTS ---
 
     private static void registerClientTick() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             EventContext ctx = new EventContext("clientTick");
-            GroovyClientTickEvents.fire(ctx); // Fire to the specific event class
+            GroovyClientTickEvents.fire(ctx);
         });
     }
 
@@ -176,5 +158,10 @@ public class EventRegistry {
     private static void fireRegisterBlockEvent() {
         EventContext ctx = new EventContext("registerBlock");
         GroovyRegisterBlockEvents.fire(ctx);
+    }
+
+    private static void fireRegisterShaderEvent() {
+        EventContext ctx = new EventContext("registerShader");
+        GroovyShaderEvents.fire(ctx);  // New shader registration event firing
     }
 }

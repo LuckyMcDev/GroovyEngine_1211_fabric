@@ -21,6 +21,7 @@ public class ResourcepackGenerator {
             Files.createDirectories(ASSETS_ROOT.resolve("models/item"));
             Files.createDirectories(ASSETS_ROOT.resolve("models/block"));
             Files.createDirectories(ASSETS_ROOT.resolve("lang"));
+            Files.createDirectories(ASSETS_ROOT.resolve("shaders/post"));
 
             // Create or overwrite en_us.json with empty JSON object if it doesn't exist
             Path langFile = ASSETS_ROOT.resolve("lang/en_us.json");

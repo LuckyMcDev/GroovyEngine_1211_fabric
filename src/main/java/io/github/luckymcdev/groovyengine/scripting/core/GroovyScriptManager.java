@@ -5,6 +5,8 @@ import com.google.gson.JsonParser;
 import groovy.lang.*;
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
+import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderBuilder;
+import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderRegistry;
 import io.github.luckymcdev.groovyengine.scripting.eventservice.events.*;
 import io.github.luckymcdev.groovyengine.scripting.builders.RecipeBuilder;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
@@ -52,8 +54,8 @@ public class GroovyScriptManager {
             Files.createDirectories(ROOT.resolve("data/datapacks"));
             Files.createDirectories(ROOT.resolve("data/resourcepacks"));
             Files.createDirectories(SCRIPTS);
-            Files.createDirectory(SCRIPTS.resolve("client"));
-            Files.createDirectory(SCRIPTS.resolve("server"));
+            Files.createDirectories(SCRIPTS.resolve("client"));
+            Files.createDirectories(SCRIPTS.resolve("server"));
         } catch (IOException e) {
             GroovyEngine.LOGGER.error("[GroovyEngine] Failed to create script folders", e);
         }
@@ -115,6 +117,9 @@ public class GroovyScriptManager {
         binding.setVariable("BlockBuilder", BlockBuilder.class);
 
         binding.setVariable("RecipeBuilder", RecipeBuilder.class);
+
+        binding.setVariable("ShaderBuilder", ShaderBuilder.class);
+        binding.setVariable("ShaderRegistry", ShaderRegistry.class);
 
         binding.setVariable("BlockBreakEvents", GroovyBlockBreakEvents.class);
         binding.setVariable("BlockPlaceEvents", GroovyBlockPlaceEvents.class);

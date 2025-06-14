@@ -1,21 +1,38 @@
 package io.github.luckymcdev.groovyengine.editor.windows;
 
 import imgui.ImGui;
-import imgui.type.ImBoolean; // Ensure this is imported if using ImBoolean in begin
+import imgui.type.ImBoolean;
+import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderRegistry;
+import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderBuilder;
+
+import java.util.Map;
 
 public class ShaderWindow {
+    private static final ImBoolean open = new ImBoolean(true);
+
     public static void render() {
-        // Using an ImBoolean to allow the user to close the window
-        ImGui.begin("Shader Editor", new ImBoolean(true)); // Added ImBoolean for consistency and close button
-        ImGui.text("This is the Shader Editor!");
-        ImGui.text("You can use this to manage your rendering!");
+        ImGui.begin("Shader Editor", open);
 
-        ImGui.separator(); // Add a separator for the new section
+        ImGui.text("Available Shaders:");
+        ImGui.separator();
 
-        // New "paragraph" to display Minecraft's output
-        ImGui.text("Minecraft Output Preview:");
-        ImGui.newLine(); // Add some vertical space
+        Map<String, ShaderBuilder> shaders = ShaderRegistry.getShaders();
 
+        for (Map.Entry<String, ShaderBuilder> entry : shaders.entrySet()) {
+            String shaderName = entry.getKey();
+            ShaderBuilder builder = entry.getValue();
+
+            boolean enabled = builder.isEnabled();
+            ImBoolean checkboxState = new ImBoolean(enabled);
+
+            if (ImGui.checkbox(shaderName, checkboxState)) {
+                if (checkboxState.get()) {
+                    builder.enable();
+                } else {
+                    builder.disable();
+                }
+            }
+        }
 
         ImGui.end();
     }

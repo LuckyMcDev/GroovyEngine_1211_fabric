@@ -3,7 +3,7 @@ package io.github.luckymcdev.groovyengine;
 import io.github.luckymcdev.groovyengine.editor.core.MainEditorImGui;
 import io.github.luckymcdev.groovyengine.editor.core.MainEditorScreen;
 import io.github.luckymcdev.groovyengine.input.GroovyKeybinds;
-import io.github.luckymcdev.groovyengine.script_event.EventRegistry;
+import io.github.luckymcdev.groovyengine.scripting.eventservice.EventRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,6 +28,7 @@ public class GroovyEngineClient implements ClientModInitializer {
             MainEditorImGui.render();
         });
 
+        // Init Client Events
         EventRegistry.initClient();
     }
 }

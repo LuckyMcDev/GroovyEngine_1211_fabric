@@ -4,9 +4,7 @@ import io.github.luckymcdev.groovyengine.generators.structure.DatapackGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.ResourcepackGenerator;
 import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptManager;
-import io.github.luckymcdev.groovyengine.script_event.EventContext;
-import io.github.luckymcdev.groovyengine.script_event.Events;
-import io.github.luckymcdev.groovyengine.script_event.EventRegistry;
+import io.github.luckymcdev.groovyengine.scripting.eventservice.EventRegistry;
 import io.github.luckymcdev.groovyengine.logging.LogCapture;
 import net.fabricmc.api.ModInitializer;
 
@@ -43,10 +41,7 @@ public class GroovyEngine implements ModInitializer {
 		System.out.println("Loading Scripts");
 		GroovyScriptManager.initialize();
 
-		Events.trigger("registerItem", new EventContext("registerItem"));
-		Events.trigger("registerBlock", new EventContext("registerBlock"));
-
-		// Initialize all other events like blockBreak, playerJoin etc.
+		// Init server Events
 		EventRegistry.initServer();
 
 
@@ -56,8 +51,7 @@ public class GroovyEngine implements ModInitializer {
 
 	private void onDataPackReloadStart(MinecraftServer server, ResourceManager resourceManager) {
 		System.out.println("GroovyEngine: Scripts reload is starting");
-		Events.clear();
-		GroovyScriptManager.loadScripts();
+		EventRegistry.clearAllEvents();
 	}
 
 	private void onDataPackReloadEnd(MinecraftServer server, ResourceManager resourceManager, boolean success) {
@@ -65,7 +59,6 @@ public class GroovyEngine implements ModInitializer {
 			System.out.println("GroovyEngine: Scripts reloaded successfully");
 		} else {
 			System.err.println("GroovyEngine: Scripts reload failed");
-			// Handle error case, e.g., log the failure, reset to default state.
 		}
 	}
 

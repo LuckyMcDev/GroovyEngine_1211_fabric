@@ -3,6 +3,8 @@ package io.github.luckymcdev.groovyengine.generators.datagen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.github.luckymcdev.groovyengine.GroovyEngine;
+import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
@@ -13,9 +15,12 @@ import java.util.Locale;
 
 public class LangGenerator {
 
-    private static final Path LANG_FILE = FabricLoader.getInstance()
-            .getGameDir()
-            .resolve("GroovyEngine/data/resourcepacks/GroovyEnginePack/assets/groovyengine/lang/en_us.json");
+    private static final Path LANG_FILE = GroovyEnginePackRootGenerator.RESOURCEPACK_ROOT
+            .resolve("assets")
+            .resolve("groovyengine")
+            .resolve("lang")
+            .resolve("en_us.json");
+
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -50,7 +55,7 @@ public class LangGenerator {
     }
 
     /**
-     * Converts an item registry name (e.g., "banana_split") to a display name ("Banana Split").
+     * Converts an item builders name (e.g., "banana_split") to a display name ("Banana Split").
      */
     public static String toDisplayName(String registryName) {
         String[] parts = registryName.split("_");

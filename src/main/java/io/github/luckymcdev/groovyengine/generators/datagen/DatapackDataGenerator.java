@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class DatapackDataGenerator {
 
-    private static final Path DATAPACK_NAMESPACE_ROOT = GroovyEnginePackRootGenerator.GROOVY_ENGINE_PACK_ROOT
+    private static final Path DATAPACK_NAMESPACE_ROOT = GroovyEnginePackRootGenerator.DATAPACK_ROOT
             .resolve("data")
             .resolve(GroovyEngine.MODID);
 

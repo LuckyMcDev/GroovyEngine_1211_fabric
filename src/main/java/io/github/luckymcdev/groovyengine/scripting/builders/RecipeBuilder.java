@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.scripting.registry;
+package io.github.luckymcdev.groovyengine.scripting.builders;
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
 import io.github.luckymcdev.groovyengine.generators.datagen.DatapackDataGenerator; // Correctly imports the generator that writes data

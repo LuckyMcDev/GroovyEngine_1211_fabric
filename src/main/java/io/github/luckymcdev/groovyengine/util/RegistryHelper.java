@@ -21,7 +21,7 @@ public class RegistryHelper<T> {
          *       'RegistryHelper<T> registryHelper=new RegistryHelper<T>(null,null);',
          *       but will only throw the 'NullPointerException' at runtime.
          * */
-        this.REGISTRY = Objects.requireNonNull(registry, "[ERROR] Oops! Something has gone horribly wrong: 'registry' is 'null' in the parsed parameter");
+        this.REGISTRY = Objects.requireNonNull(registry, "[ERROR] Oops! Something has gone horribly wrong: 'builders' is 'null' in the parsed parameter");
         MOD_ID = Objects.requireNonNull(modId, "[ERROR] Oops! Something has gone horribly wrong: 'modId' is 'null' in the parsed parameter");
     }
 

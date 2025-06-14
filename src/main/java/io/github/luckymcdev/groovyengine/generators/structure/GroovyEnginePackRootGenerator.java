@@ -10,33 +10,43 @@ import java.nio.file.Path;
 
 public class GroovyEnginePackRootGenerator {
 
-    private static final int PACK_FORMAT = 17; // For Minecraft 1.21.1
+    private static final int DATAPACK_FORMAT = 36; // For Minecraft 1.21.1 (data packs)
+    private static final int RESOURCEPACK_FORMAT = 26; // For Minecraft 1.21.1 (resource packs)
 
-    public static final Path GROOVY_ENGINE_PACK_ROOT = FabricLoader.getInstance()
+    public static final Path BASE_PATH = FabricLoader.getInstance()
             .getGameDir()
             .resolve("GroovyEngine")
-            .resolve("data") // This is where the custom packs should generally reside
-            .resolve("datapacks") // Datapacks go here
-            .resolve("GroovyEnginePack"); // The specific folder name for your combined pack
+            .resolve("data");
+
+    public static final Path DATAPACK_ROOT = BASE_PATH.resolve("datapacks").resolve("GroovyEnginePack");
+    public static final Path RESOURCEPACK_ROOT = BASE_PATH.resolve("resourcepacks").resolve("GroovyEnginePack");
 
     public static void generate() {
         try {
-            // Create the root directory for the combined pack
-            Files.createDirectories(GROOVY_ENGINE_PACK_ROOT);
-
-            // Create pack.mcmeta for the combined pack
-            String packMcmeta = "{\n" +
+            // Create datapack
+            Files.createDirectories(DATAPACK_ROOT);
+            String dpMeta = "{\n" +
                     "  \"pack\": {\n" +
-                    "    \"pack_format\": " + PACK_FORMAT + ",\n" +
-                    "    \"description\": \"GroovyEngine Generated Content (Resource Pack & Datapack)\"\n" +
+                    "    \"pack_format\": " + DATAPACK_FORMAT + ",\n" +
+                    "    \"description\": \"GroovyEngine Datapack\"\n" +
                     "  }\n" +
                     "}";
-            Files.writeString(GROOVY_ENGINE_PACK_ROOT.resolve("pack.mcmeta"), packMcmeta, StandardCharsets.UTF_8);
+            Files.writeString(DATAPACK_ROOT.resolve("pack.mcmeta"), dpMeta, StandardCharsets.UTF_8);
 
-            GroovyEngine.LOGGER.info("Generated base GroovyEnginePack folder and pack.mcmeta.");
+            // Create resourcepack
+            Files.createDirectories(RESOURCEPACK_ROOT);
+            String rpMeta = "{\n" +
+                    "  \"pack\": {\n" +
+                    "    \"pack_format\": " + RESOURCEPACK_FORMAT + ",\n" +
+                    "    \"description\": \"GroovyEngine Resourcepack\"\n" +
+                    "  }\n" +
+                    "}";
+            Files.writeString(RESOURCEPACK_ROOT.resolve("pack.mcmeta"), rpMeta, StandardCharsets.UTF_8);
+
+            GroovyEngine.LOGGER.info("Generated base GroovyEngine Datapack and Resourcepack structure.");
 
         } catch (IOException e) {
-            GroovyEngine.LOGGER.error("Failed to generate GroovyEnginePack root or pack.mcmeta: {}", e.getMessage());
+            GroovyEngine.LOGGER.error("Failed to generate GroovyEngine packs: {}", e.getMessage());
         }
     }
 }

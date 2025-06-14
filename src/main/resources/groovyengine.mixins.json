@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin",
-    "command.MixinReloadCommand",
     "imgui.MinecraftClientMixin"
   ],
   "injectors": {

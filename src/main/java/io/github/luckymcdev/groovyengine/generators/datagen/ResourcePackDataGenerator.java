@@ -21,7 +21,7 @@ public class ResourcePackDataGenerator {
     /**
      * Generates the item model JSON file for the given item name and texture path.
      *
-     * @param itemName    The registry name of the item (e.g., "banana").
+     * @param itemName    The builders name of the item (e.g., "banana").
      * @param texturePath The texture path in "modid:item/banana" format.
      */
     public static void generateItemModel(String itemName, String texturePath) {

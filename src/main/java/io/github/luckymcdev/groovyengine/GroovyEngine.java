@@ -3,8 +3,7 @@ package io.github.luckymcdev.groovyengine;
 import io.github.luckymcdev.groovyengine.generators.structure.DatapackGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.ResourcepackGenerator;
-import io.github.luckymcdev.groovyengine.rendering.api.event.PostWorldRenderCallback;
-import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptLoader;
+import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptManager;
 import io.github.luckymcdev.groovyengine.script_event.EventContext;
 import io.github.luckymcdev.groovyengine.script_event.Events;
 import io.github.luckymcdev.groovyengine.script_event.EventRegistry;
@@ -39,7 +38,7 @@ public class GroovyEngine implements ModInitializer {
 		DatapackGenerator.generate();
 
 		System.out.println("Loading Scripts");
-		GroovyScriptLoader.initialize();
+		GroovyScriptManager.initialize();
 
 		Events.trigger("registerItem", new EventContext("registerItem"));
 		Events.trigger("registerBlock", new EventContext("registerBlock"));

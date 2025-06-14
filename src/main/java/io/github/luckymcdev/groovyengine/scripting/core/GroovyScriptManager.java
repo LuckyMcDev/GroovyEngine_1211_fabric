@@ -32,19 +32,13 @@ import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
-public class GroovyScriptLoader {
+public class GroovyScriptManager {
 
     private static final Path ROOT = FabricLoader.getInstance().getGameDir().resolve("GroovyEngine");
 
     public static void initialize() {
         createFoldersIfNeeded();
         loadScripts();
-
-        ScriptWatcher.startWatching(ROOT, () -> {
-            GroovyEngine.LOGGER.info("[GroovyEngine] Reloading scripts due to file change...");
-            Events.clear();
-            loadScripts();
-        });
     }
 
     private static void createFoldersIfNeeded() {

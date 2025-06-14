@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.editor.gui;
+package io.github.luckymcdev.groovyengine.editor.core;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

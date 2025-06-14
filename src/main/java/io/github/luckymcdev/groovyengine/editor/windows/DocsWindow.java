@@ -22,7 +22,7 @@ public class DocsWindow {
             ImGui.textColored(0.8f, 0.9f, 1f, 1f, "Core Scripting Functions:");
 
             if (ImGui.treeNode(" Events.on(eventName, callback)")) {
-                ImGui.textWrapped("Register a callback for a specific event.");
+                ImGui.textWrapped("Register a callback for a specific script_event.");
                 ImGui.separator();
                 ImGui.textColored(0.7f, 1f, 0.7f, 1f, "Example:");
                 ImGui.textWrapped("""
@@ -71,7 +71,7 @@ public class DocsWindow {
         }
 
         if (ImGui.treeNode("-- Event Names --")) {
-            ImGui.text("Supported event hooks:");
+            ImGui.text("Supported script_event hooks:");
             ImGui.bulletText("- clientTick");
             ImGui.bulletText("- serverTick");
             ImGui.bulletText("- playerJoin / playerLeave");

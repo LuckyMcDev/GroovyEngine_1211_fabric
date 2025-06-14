@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.event;
+package io.github.luckymcdev.groovyengine.script_event;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

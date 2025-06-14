@@ -3,7 +3,7 @@ package io.github.luckymcdev.groovyengine.scripting.core;
 import groovy.lang.*;
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.event.Events;
+import io.github.luckymcdev.groovyengine.script_event.Events;
 import io.github.luckymcdev.groovyengine.scripting.registry.RecipeBuilder;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyLogger;

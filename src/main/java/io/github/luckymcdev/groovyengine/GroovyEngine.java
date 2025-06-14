@@ -3,10 +3,11 @@ package io.github.luckymcdev.groovyengine;
 import io.github.luckymcdev.groovyengine.generators.structure.DatapackGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.ResourcepackGenerator;
+import io.github.luckymcdev.groovyengine.rendering.api.event.PostWorldRenderCallback;
 import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptLoader;
-import io.github.luckymcdev.groovyengine.event.EventContext;
-import io.github.luckymcdev.groovyengine.event.Events;
-import io.github.luckymcdev.groovyengine.event.EventRegistry;
+import io.github.luckymcdev.groovyengine.script_event.EventContext;
+import io.github.luckymcdev.groovyengine.script_event.Events;
+import io.github.luckymcdev.groovyengine.script_event.EventRegistry;
 import io.github.luckymcdev.groovyengine.logging.LogCapture;
 import net.fabricmc.api.ModInitializer;
 
@@ -21,7 +22,11 @@ public class GroovyEngine implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-	@Override
+    public static boolean areShadersDisabled() {
+		return false;
+    }
+
+    @Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
@@ -35,7 +40,6 @@ public class GroovyEngine implements ModInitializer {
 
 		System.out.println("Loading Scripts");
 		GroovyScriptLoader.initialize();
-
 
 		Events.trigger("registerItem", new EventContext("registerItem"));
 		Events.trigger("registerBlock", new EventContext("registerBlock"));

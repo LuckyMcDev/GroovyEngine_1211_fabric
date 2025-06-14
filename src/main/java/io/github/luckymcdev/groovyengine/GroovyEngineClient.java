@@ -1,21 +1,15 @@
 package io.github.luckymcdev.groovyengine;
 
-import io.github.luckymcdev.groovyengine.editor.gui.MainEditorImGui;
-import io.github.luckymcdev.groovyengine.editor.gui.MainEditorScreen;
+import io.github.luckymcdev.groovyengine.editor.core.MainEditorImGui;
+import io.github.luckymcdev.groovyengine.editor.core.MainEditorScreen;
 import io.github.luckymcdev.groovyengine.input.GroovyKeybinds;
-import io.github.luckymcdev.groovyengine.event.EventRegistry;
+import io.github.luckymcdev.groovyengine.script_event.EventRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.text.Text;
-
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 @Environment(EnvType.CLIENT)
 public class GroovyEngineClient implements ClientModInitializer {

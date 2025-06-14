@@ -26,6 +26,16 @@ repositories {
 	flatDir {
 		dirs 'lib'
 	}
+
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+		content {
+			includeGroup 'io.github.ladysnake'
+			includeGroup 'org.ladysnake'
+			includeGroupByRegex 'dev\\.onyxstudios.*'
+		}
+	}
 }
 
 dependencies {
@@ -40,16 +50,21 @@ dependencies {
 	// openloader for data and resourcepacks
 	modImplementation "net.darkhax.openloader:openloader-fabric-1.21.1:21.1.5"
 
+
+	//TODO: FIX THIS SHIT TO INCLUDE IN THE JAR!
 	//include( implementation files('lib/groovy-5.0.0-alpha-1.jar') )
 	// Groovy (for scripting)
 	implementation fileTree(dir: 'lib', include: ['*.jar'])
-
-
 
 	include(implementation "io.github.spair:imgui-java-binding:${project.imgui_version}")
 	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}") {
 		exclude group: 'org.lwjgl'
 	}
+
+	// Satin for shader stuff, may do that myself at some point
+	modImplementation "org.ladysnake:satin:${project.satin_version}"
+	// Include Satin as a Jar-in-Jar dependency (optional)
+	include "org.ladysnake:satin:${project.satin_version}"
 
 	include(implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
 

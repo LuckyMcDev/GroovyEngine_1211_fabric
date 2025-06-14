@@ -21,7 +21,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -121,6 +123,8 @@ public class GroovyScriptManager {
         binding.setVariable("ShaderBuilder", ShaderBuilder.class);
         binding.setVariable("ShaderRegistry", ShaderRegistry.class);
 
+        // --- Events ---
+
         binding.setVariable("BlockBreakEvents", GroovyBlockBreakEvents.class);
         binding.setVariable("BlockPlaceEvents", GroovyBlockPlaceEvents.class);
         binding.setVariable("ClientTickEvents", GroovyClientTickEvents.class);
@@ -131,6 +135,36 @@ public class GroovyScriptManager {
         binding.setVariable("RegisterBlockEvents", GroovyRegisterBlockEvents.class);
         binding.setVariable("RegisterItemEvents", GroovyRegisterItemEvents.class);
         binding.setVariable("ServerTickEvents", GroovyServerTickEvents.class);
+
+
+        // --- Mc classes ---
+
+        binding.setVariable("Item", net.minecraft.item.Item.class);
+        binding.setVariable("ItemGroups", net.minecraft.item.ItemGroups.class);
+        binding.setVariable("ItemSettings", net.minecraft.item.Item.Settings.class);
+
+        binding.setVariable("Block", net.minecraft.block.Block.class);
+        binding.setVariable("AbstractBlock", net.minecraft.block.AbstractBlock.class);
+        binding.setVariable("BlockSettings", net.minecraft.block.AbstractBlock.Settings.class);
+
+        binding.setVariable("StatusEffect", net.minecraft.entity.effect.StatusEffect.class);
+        binding.setVariable("StatusEffects", net.minecraft.entity.effect.StatusEffects.class);
+
+        binding.setVariable("SoundEvents", net.minecraft.sound.SoundEvents.class);
+        binding.setVariable("ParticleTypes", net.minecraft.particle.ParticleTypes.class);
+
+        binding.setVariable("Text", net.minecraft.text.Text.class);
+
+        binding.setVariable("Identifier", net.minecraft.util.Identifier.class);
+
+        binding.setVariable("DyeColor", net.minecraft.util.DyeColor.class);
+        binding.setVariable("Hand", net.minecraft.util.Hand.class);
+        binding.setVariable("ActionResult", net.minecraft.util.ActionResult.class);
+        binding.setVariable("BlockPos", net.minecraft.util.math.BlockPos.class);
+        binding.setVariable("Direction", net.minecraft.util.math.Direction.class);
+
+
+
 
 
         return new GroovyShell(binding, createCompilerConfig());

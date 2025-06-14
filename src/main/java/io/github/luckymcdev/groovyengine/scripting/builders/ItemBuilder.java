@@ -6,6 +6,8 @@ import io.github.luckymcdev.groovyengine.generators.datagen.ResourcePackDataGene
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
 import net.minecraft.item.Item;
 
+import java.util.function.Consumer;
+
 public class ItemBuilder {
     private final RegistryHelper<Item> registry;
     private final String name;
@@ -36,10 +38,8 @@ public class ItemBuilder {
         return new ItemBuilder(sharedHelper, name);
     }
 
-    public ItemBuilder settings(Item.Settings settings) {
-        if (settings != null) {
-            this.settings = settings;
-        }
+    public ItemBuilder settings(Consumer<Item.Settings> consumer) {
+        consumer.accept(this.settings);
         return this;
     }
 

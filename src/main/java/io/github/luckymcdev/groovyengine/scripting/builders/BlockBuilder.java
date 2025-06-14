@@ -11,6 +11,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 
+import java.util.function.Consumer;
+
 public class BlockBuilder {
     private final RegistryHelper<Block> registry;
     private final String name;
@@ -41,10 +43,8 @@ public class BlockBuilder {
         return new BlockBuilder(sharedHelper, name);
     }
 
-    public BlockBuilder settings(AbstractBlock.Settings settings) {
-        // Optional to allow custom settings
-        // (e.g. material, hardness, luminance, etc)
-        this.settings = settings;
+    public BlockBuilder settings(Consumer<AbstractBlock.Settings> consumer) {
+        consumer.accept(this.settings);
         return this;
     }
 

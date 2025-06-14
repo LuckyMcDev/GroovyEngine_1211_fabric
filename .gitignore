@@ -32,6 +32,9 @@ bin/
 
 run/
 
+!run/GroovyEngine/
+!run/GroovyEngine/**
+
 # java
 
 hs_err_*.log

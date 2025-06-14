@@ -10,6 +10,9 @@ import io.github.luckymcdev.groovyengine.script_event.EventRegistry;
 import io.github.luckymcdev.groovyengine.logging.LogCapture;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +48,25 @@ public class GroovyEngine implements ModInitializer {
 
 		// Initialize all other events like blockBreak, playerJoin etc.
 		EventRegistry.initServer();
+
+
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(this::onDataPackReloadEnd);
+		ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(this::onDataPackReloadStart);
+	}
+
+	private void onDataPackReloadStart(MinecraftServer server, ResourceManager resourceManager) {
+		System.out.println("GroovyEngine: Scripts reload is starting");
+		Events.clear();
+		GroovyScriptManager.loadScripts();
+	}
+
+	private void onDataPackReloadEnd(MinecraftServer server, ResourceManager resourceManager, boolean success) {
+		if (success) {
+			System.out.println("GroovyEngine: Scripts reloaded successfully");
+		} else {
+			System.err.println("GroovyEngine: Scripts reload failed");
+			// Handle error case, e.g., log the failure, reset to default state.
+		}
 	}
 
 }

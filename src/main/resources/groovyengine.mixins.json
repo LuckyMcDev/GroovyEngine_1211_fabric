@@ -4,25 +4,12 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin",
-    "imgui.MinecraftClientMixin",
-    "rendering.AccessiblePassesShaderEffect",
-    "rendering.event.GameRendererMixin",
-    "rendering.gl.CoreShaderMixin",
-    "rendering.gl.CustomFormatFramebufferMixin",
-    "rendering.gl.CustomFormatPostEffectProcessorMixin",
-    "rendering.gl.DepthGlFramebufferMixin",
-    "rendering.gl.GlUniformMixin",
-    "rendering.render.RenderLayerAccessor",
-    "rendering.render.RenderPhaseAccessor",
-    "rendering.render.WorldRendererMixin"
+    "command.MixinReloadCommand",
+    "imgui.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "rendering.blockrenderlayer.RenderLayerMixin",
-    "rendering.render.RenderLayerMixin",
-    "rendering.render.RenderLayerMixin$MultiPhaseParametersAccessor",
-    "rendering.render.RenderLayerMultiPhaseMixin"
   ]
 }

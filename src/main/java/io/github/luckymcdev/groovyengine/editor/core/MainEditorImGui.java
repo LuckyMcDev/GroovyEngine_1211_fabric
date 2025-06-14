@@ -3,7 +3,7 @@ package io.github.luckymcdev.groovyengine.editor.core;
 import io.github.luckymcdev.groovyengine.editor.windows.BlockDisplayBrowserWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.ConsoleWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.DocsWindow;
-import io.github.luckymcdev.groovyengine.editor.windows.ScriptBrowserWindow;
+import io.github.luckymcdev.groovyengine.editor.windows.EditorWindow;       // <-- added
 import io.github.luckymcdev.groovyengine.editor.windows.ShaderWindow;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiRegistry;
 import io.github.luckymcdev.groovyengine.imgui.ImGuiImpl;
@@ -14,15 +14,13 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class MainEditorImGui {
-    private static float menuBarHeight = 0; // This variable isn't used in the provided code
-    // but keep it if you have plans for it.
+    private static float menuBarHeight = 0; // unused, kept for potential future use
 
     public static boolean showConsole = true;
-    public static boolean showScripts = true;
-    public static boolean showDocs = true;
-    public static boolean showBlockBrowser = true;
-    public static boolean showShaderEditor = false; // New: control visibility of ShaderWindow
-    public static boolean showMinecraftView = false; // New: control visibility of MinecraftViewWindow
+    public static boolean showDocs = false;
+    public static boolean showBlockBrowser = false;
+    public static boolean showShaderEditor = false;
+    public static boolean showEditorWindow = false; // new toggle for EditorWindow
 
     public static void render() {
         ImGuiImpl.draw(io -> {
@@ -33,10 +31,10 @@ public class MainEditorImGui {
             GuiRegistry.renderAll();
 
             if (showConsole) ConsoleWindow.render();
-            if (showScripts) ScriptBrowserWindow.render();
             if (showDocs) DocsWindow.render();
             if (showBlockBrowser) BlockDisplayBrowserWindow.render();
-            if (showShaderEditor) ShaderWindow.render(); // Render ShaderWindow if visible
+            if (showShaderEditor) ShaderWindow.render();
+            if (showEditorWindow) EditorWindow.draw();  // <-- render EditorWindow
 
             ImGui.popFont();
         });
@@ -46,26 +44,24 @@ public class MainEditorImGui {
         if (ImGui.beginMainMenuBar()) {
             if (ImGui.beginMenu("Windows")) {
                 if (ImGui.menuItem("Console", "", showConsole)) showConsole = !showConsole;
-                if (ImGui.menuItem("Script Browser", "", showScripts)) showScripts = !showScripts;
+                ImGui.separator();
+                if (ImGui.menuItem("Script Editor", "", showEditorWindow)) showEditorWindow = !showEditorWindow;
+                ImGui.separator();
                 if (ImGui.menuItem("Documentation", "", showDocs)) showDocs = !showDocs;
-                if (ImGui.menuItem("Block Browser", "", showBlockBrowser)) showBlockBrowser = !showBlockBrowser;
-                ImGui.separator(); // Separator for better organization
-                if (ImGui.menuItem("Shader Editor", "", showShaderEditor)) showShaderEditor = !showShaderEditor; // Menu item for ShaderWindow
+                //if (ImGui.menuItem("Block Browser", "", showBlockBrowser)) showBlockBrowser = !showBlockBrowser;
+                ImGui.separator();
+                if (ImGui.menuItem("Shader Editor", "", showShaderEditor)) showShaderEditor = !showShaderEditor;
                 ImGui.endMenu();
             }
 
             if (ImGui.beginMenu("View")) {
                 if (ImGui.menuItem("Reset Layout")) {
-                    showConsole = showScripts = showDocs = showBlockBrowser = showShaderEditor = showMinecraftView = true;
+                    showConsole = true;
+                    showEditorWindow = true;   // reset EditorWindow visible on reset
+                    showDocs = true;
+                    showBlockBrowser = true;
+                    showShaderEditor = true;
                 }
-                ImGui.endMenu();
-            }
-
-            if(ImGui.beginMenu("Shaders")) {
-                if(ImGui.menuItem("Open Shader Editor", "", showShaderEditor)) {
-                    showShaderEditor = !showShaderEditor;
-                }
-                // Removed "COMING SOON!" as we now have an editor
                 ImGui.endMenu();
             }
 

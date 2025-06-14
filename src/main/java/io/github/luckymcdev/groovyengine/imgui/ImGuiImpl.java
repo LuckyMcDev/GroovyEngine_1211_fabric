@@ -34,6 +34,8 @@ public class ImGuiImpl {
         ImGui.createContext();
         ImPlot.createContext();
 
+        ImGuiStyleManager.setupCustomGrayTheme();
+
         final ImGuiIO data = ImGui.getIO();
         data.setIniFilename("groovyengine.ini");
         data.setFontGlobalScale(1F);
@@ -100,7 +102,7 @@ public class ImGuiImpl {
         ImPlot.destroyContext();
     }
 
-    // Can be used to load buffered images in ImGui
+    //Unused, load buffered images (was for the live shader view)
     public static int fromBufferedImage(BufferedImage image) {
         final int[] pixels = new int[image.getWidth() * image.getHeight()];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());

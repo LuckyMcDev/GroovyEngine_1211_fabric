@@ -15,14 +15,25 @@ public class ItemBuilder {
 
     private Item item;
 
+    private static RegistryHelper<Item> sharedHelper;
+
     private ItemBuilder(RegistryHelper<Item> registry, String name) {
         this.registry = registry;
         this.name = name;
         this.settings = new Item.Settings();
     }
 
+    public static void setSharedHelper(RegistryHelper<Item> helper) {
+        sharedHelper = helper;
+    }
+
     public static ItemBuilder register(RegistryHelper<Item> registry, String name) {
         return new ItemBuilder(registry, name);
+    }
+
+    public static ItemBuilder register(String name) {
+        if (sharedHelper == null) throw new IllegalStateException("Shared helper not set!");
+        return new ItemBuilder(sharedHelper, name);
     }
 
     public ItemBuilder settings(Item.Settings settings) {
@@ -39,7 +50,6 @@ public class ItemBuilder {
 
     public ItemBuilder texture(String texturePath) {
         this.texturePath = texturePath;
-        // Implement texture handling later if needed
         return this;
     }
 
@@ -50,7 +60,6 @@ public class ItemBuilder {
 
             ResourcePackDataGenerator.generateItemModel(name, GroovyEngine.MODID + ":item/" + name);
 
-            // Register lang entry
             if (displayName != null) {
                 LangGenerator.addLangEntry("item." + GroovyEngine.MODID + "." + name, displayName);
             } else {

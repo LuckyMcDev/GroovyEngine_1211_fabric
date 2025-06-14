@@ -107,15 +107,13 @@ public class GroovyScriptManager {
         // --- Builders ---
 
         RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID);
-        binding.setVariable("ItemBuilder", new Closure<>(null) {
-            public Object call(Object... args) {
-                if (args.length < 1) throw new IllegalArgumentException("You must provide the item name.");
-                return ItemBuilder.register(itemHelper, args[0].toString());
-            }
-        });
+        ItemBuilder.setSharedHelper(itemHelper);
+        binding.setVariable("ItemBuilder", ItemBuilder.class);
+
         RegistryHelper<Block> blockHelper = new RegistryHelper<>(Registries.BLOCK, GroovyEngine.MODID);
         BlockBuilder.setSharedHelper(blockHelper);
         binding.setVariable("BlockBuilder", BlockBuilder.class);
+
         binding.setVariable("RecipeBuilder", RecipeBuilder.class);
 
         binding.setVariable("BlockBreakEvents", GroovyBlockBreakEvents.class);

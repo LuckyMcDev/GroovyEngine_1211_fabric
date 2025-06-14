@@ -5,16 +5,20 @@ import io.github.luckymcdev.groovyengine.editor.windows.ConsoleWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.DocsWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.EditorWindow;       // <-- added
 import io.github.luckymcdev.groovyengine.editor.windows.ShaderWindow;
+import io.github.luckymcdev.groovyengine.gemodelling.core.GeModellingImGui;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiRegistry;
 import io.github.luckymcdev.groovyengine.imgui.ImGuiImpl;
 import imgui.ImGui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class MainEditorImGui {
-    private static float menuBarHeight = 0; // unused, kept for potential future use
+
+    public static boolean showGroovyEngineModellingGroup = false;
 
     public static boolean showConsole = true;
     public static boolean showDocs = false;
@@ -30,11 +34,15 @@ public class MainEditorImGui {
 
             GuiRegistry.renderAll();
 
-            if (showConsole) ConsoleWindow.render();
-            if (showDocs) DocsWindow.render();
-            if (showBlockBrowser) BlockDisplayBrowserWindow.render();
-            if (showShaderEditor) ShaderWindow.render();
-            if (showEditorWindow) EditorWindow.draw();  // <-- render EditorWindow
+            if (showGroovyEngineModellingGroup) {
+                renderGroovyEngineModellingGroup();
+            } else {
+                if (showConsole) ConsoleWindow.render();
+                if (showDocs) DocsWindow.render();
+                if (showBlockBrowser) BlockDisplayBrowserWindow.render();
+                if (showShaderEditor) ShaderWindow.render();
+                if (showEditorWindow) EditorWindow.draw();
+            }
 
             ImGui.popFont();
         });
@@ -54,12 +62,27 @@ public class MainEditorImGui {
                 ImGui.endMenu();
             }
 
+            // New menu for Ge Modelling
+            if (ImGui.beginMenu("GroovyEngine Modelling")) {
+                if (ImGui.menuItem("Open GroovyEngine Modelling Screen")) {
+                    // Close all other windows
+                    showConsole = false;
+                    showDocs = false;
+                    showBlockBrowser = false;
+                    showShaderEditor = false;
+                    showEditorWindow = false;
+
+                    // Open only modelling group
+                    showGroovyEngineModellingGroup = true;
+                }
+                ImGui.endMenu();
+            }
+
             if (ImGui.beginMenu("View")) {
                 if (ImGui.menuItem("Reset Layout")) {
                     showConsole = true;
                     showEditorWindow = true;   // reset EditorWindow visible on reset
                     showDocs = true;
-                    showBlockBrowser = true;
                     showShaderEditor = true;
                 }
                 ImGui.endMenu();
@@ -68,4 +91,9 @@ public class MainEditorImGui {
             ImGui.endMainMenuBar();
         }
     }
+
+    private static void renderGroovyEngineModellingGroup() {
+        GeModellingImGui.render();
+    }
+
 }

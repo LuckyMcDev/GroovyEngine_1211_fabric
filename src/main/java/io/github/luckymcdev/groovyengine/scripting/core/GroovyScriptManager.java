@@ -9,6 +9,7 @@ import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderBuilde
 import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderRegistry;
 import io.github.luckymcdev.groovyengine.scripting.eventservice.events.*;
 import io.github.luckymcdev.groovyengine.scripting.builders.RecipeBuilder;
+import io.github.luckymcdev.groovyengine.scripting.security.SandboxClassLoader;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyLogger;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiBinding;
@@ -32,6 +33,7 @@ import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Duration;
@@ -61,6 +63,29 @@ public class GroovyScriptManager {
         } catch (IOException e) {
             GroovyEngine.LOGGER.error("[GroovyEngine] Failed to create script folders", e);
         }
+    }
+
+    private static SandboxClassLoader createSandboxLoader(Path scriptBaseDir) {
+        URL[] scriptUrls = new URL[]{};
+        try {
+            // Convert the script's base directory to a URL.
+            // This allows the SandboxClassLoader to find compiled script classes or other local resources.
+            scriptUrls = new URL[]{scriptBaseDir.toUri().toURL()};
+        } catch (IOException e) {
+            GroovyEngine.LOGGER.error("Failed to convert script base directory to URL: {}", scriptBaseDir, e);
+            // If conversion fails, proceed with an empty URL array.
+            // This means the SandboxClassLoader won't be able to load classes from the script's local path,
+            // but it will still enforce restrictions on classes loaded by its parent.
+        }
+
+        // The parent ClassLoader for the SandboxClassLoader should typically be the application's
+        // default ClassLoader. This allows it to load safe core Java and Minecraft classes
+        // (which are then filtered by the SandboxClassLoader's rules).
+        ClassLoader parentClassLoader = GroovyScriptManager.class.getClassLoader();
+        // Alternatively, for a slightly different hierarchy:
+        // ClassLoader parentClassLoader = Thread.currentThread().getContextClassLoader();
+
+        return new SandboxClassLoader(scriptUrls, parentClassLoader);
     }
 
     private static CompilerConfiguration createCompilerConfig() {
@@ -164,10 +189,8 @@ public class GroovyScriptManager {
         binding.setVariable("Direction", net.minecraft.util.math.Direction.class);
 
 
-
-
-
-        return new GroovyShell(binding, createCompilerConfig());
+        return new GroovyShell(//createSandboxLoader(scriptPath.getParent()),
+                binding, createCompilerConfig());
     }
 
     private static void loadMainScript() {

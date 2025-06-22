@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin",
-    "imgui.MinecraftClientMixin"
+    "imgui.MinecraftClientMixin",
+    "rendering.DisplayEntityRendererMixin",
+    "rendering.EntityRendererMixin",
   ],
   "injectors": {
     "defaultRequire": 1

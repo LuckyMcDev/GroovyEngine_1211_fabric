@@ -5,8 +5,7 @@
   "mixins": [
     "ExampleMixin",
     "imgui.MinecraftClientMixin",
-    "rendering.DisplayEntityRendererMixin",
-    "rendering.EntityRendererMixin",
+    "rendering.EntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

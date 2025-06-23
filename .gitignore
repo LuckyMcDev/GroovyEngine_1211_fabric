@@ -30,6 +30,9 @@ bin/
 
 # fabric
 /run
+!/run/GroovyEngine/*
+!/run/GroovyEngine/
+
 
 # java
 

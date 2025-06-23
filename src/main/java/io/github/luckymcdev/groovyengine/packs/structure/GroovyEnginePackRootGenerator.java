@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.generators.structure;
+package io.github.luckymcdev.groovyengine.packs.structure;
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
 import net.fabricmc.loader.api.FabricLoader;

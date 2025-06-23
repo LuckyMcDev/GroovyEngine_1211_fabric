@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.generators.datagen;
+package io.github.luckymcdev.groovyengine.packs.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

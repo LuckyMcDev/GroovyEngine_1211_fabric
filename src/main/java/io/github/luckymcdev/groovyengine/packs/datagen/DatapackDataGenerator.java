@@ -1,11 +1,11 @@
-package io.github.luckymcdev.groovyengine.generators.datagen;
+package io.github.luckymcdev.groovyengine.packs.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
+import io.github.luckymcdev.groovyengine.packs.structure.GroovyEnginePackRootGenerator;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;

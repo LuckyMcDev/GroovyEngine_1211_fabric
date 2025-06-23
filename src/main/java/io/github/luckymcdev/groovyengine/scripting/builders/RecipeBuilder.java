@@ -1,7 +1,7 @@
 package io.github.luckymcdev.groovyengine.scripting.builders;
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.generators.datagen.DatapackDataGenerator;
+import io.github.luckymcdev.groovyengine.packs.datagen.DatapackDataGenerator;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;

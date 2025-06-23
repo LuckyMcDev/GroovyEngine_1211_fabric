@@ -1,11 +1,9 @@
-package io.github.luckymcdev.groovyengine.generators.datagen;
+package io.github.luckymcdev.groovyengine.packs.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
-import net.fabricmc.loader.api.FabricLoader;
+import io.github.luckymcdev.groovyengine.packs.structure.GroovyEnginePackRootGenerator;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

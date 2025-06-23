@@ -4,8 +4,11 @@ import io.github.luckymcdev.groovyengine.generators.structure.DatapackGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
 import io.github.luckymcdev.groovyengine.generators.structure.ResourcepackGenerator;
 import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptManager;
+import io.github.luckymcdev.groovyengine.scripting.eventservice.EventContext;
 import io.github.luckymcdev.groovyengine.scripting.eventservice.EventRegistry;
 import io.github.luckymcdev.groovyengine.logging.LogCapture;
+import io.github.luckymcdev.groovyengine.scripting.eventservice.events.GroovyRegisterBlockEvents;
+import io.github.luckymcdev.groovyengine.scripting.eventservice.events.GroovyRegisterItemEvents;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -39,6 +42,8 @@ public class GroovyEngine implements ModInitializer {
 
 		// Init server Events
 		EventRegistry.initServer();
+		fireRegisterBlockEvent();
+		fireRegisterItemEvent();
 
 
 		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(this::onDataPackReloadEnd);
@@ -48,6 +53,8 @@ public class GroovyEngine implements ModInitializer {
 	private void onDataPackReloadStart(MinecraftServer server, ResourceManager resourceManager) {
 		System.out.println("GroovyEngine: Scripts reload is starting");
 		EventRegistry.clearAllEvents();
+		GroovyScriptManager.reloadScripts();
+
 	}
 
 	private void onDataPackReloadEnd(MinecraftServer server, ResourceManager resourceManager, boolean success) {
@@ -56,6 +63,19 @@ public class GroovyEngine implements ModInitializer {
 		} else {
 			System.err.println("GroovyEngine: Scripts reload failed");
 		}
+	}
+
+
+	// --- REGISTRATION EVENTS ---
+
+	private static void fireRegisterItemEvent() {
+		EventContext ctx = new EventContext("registerItem");
+		GroovyRegisterItemEvents.fire(ctx);
+	}
+
+	private static void fireRegisterBlockEvent() {
+		EventContext ctx = new EventContext("registerBlock");
+		GroovyRegisterBlockEvents.fire(ctx);
 	}
 
 }

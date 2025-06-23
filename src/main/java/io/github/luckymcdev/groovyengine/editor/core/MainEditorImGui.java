@@ -5,15 +5,12 @@ import io.github.luckymcdev.groovyengine.editor.windows.ConsoleWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.DocsWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.EditorWindow;       // <-- added
 import io.github.luckymcdev.groovyengine.editor.windows.ShaderWindow;
-import io.github.luckymcdev.groovyengine.gemodelling.core.GeModellingImGui;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiRegistry;
 import io.github.luckymcdev.groovyengine.imgui.ImGuiImpl;
 import imgui.ImGui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class MainEditorImGui {

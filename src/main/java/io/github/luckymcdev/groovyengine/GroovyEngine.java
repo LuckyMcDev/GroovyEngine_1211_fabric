@@ -1,8 +1,9 @@
 package io.github.luckymcdev.groovyengine;
 
-import io.github.luckymcdev.groovyengine.generators.structure.DatapackGenerator;
-import io.github.luckymcdev.groovyengine.generators.structure.GroovyEnginePackRootGenerator;
-import io.github.luckymcdev.groovyengine.generators.structure.ResourcepackGenerator;
+import io.github.luckymcdev.groovyengine.packs.OpenloaderConfigPatcher;
+import io.github.luckymcdev.groovyengine.packs.structure.DatapackGenerator;
+import io.github.luckymcdev.groovyengine.packs.structure.GroovyEnginePackRootGenerator;
+import io.github.luckymcdev.groovyengine.packs.structure.ResourcepackGenerator;
 import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptManager;
 import io.github.luckymcdev.groovyengine.scripting.eventservice.EventContext;
 import io.github.luckymcdev.groovyengine.scripting.eventservice.EventRegistry;
@@ -25,6 +26,9 @@ public class GroovyEngine implements ModInitializer {
     @Override
 	public void onInitialize() {
 		LogCapture.hookLog4j();
+
+		OpenloaderConfigPatcher.patch();
+
 
 		LOGGER.info("Generating Pack Structure");
 		GroovyEnginePackRootGenerator.generate();

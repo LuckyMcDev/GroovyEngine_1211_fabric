@@ -52,6 +52,10 @@ public class GroovyScriptManager {
         loadEnvironmentScripts();
     }
 
+    public static void reloadScripts() {
+        loadEnvironmentScripts();
+    }
+
 
     private static void createFoldersIfNeeded() {
         try {
@@ -262,10 +266,9 @@ public class GroovyScriptManager {
         }
     }
 
-
     private static void loadEnvironmentScripts() {
         EnvType env = FabricLoader.getInstance().getEnvironmentType();
-        Path folder = env == EnvType.CLIENT ? SCRIPTS.resolve("client") : SCRIPTS.resolve("server"); // ← Fix path
+        Path folder = env == EnvType.CLIENT ? SCRIPTS.resolve("client") : SCRIPTS.resolve("server");
         runScriptsInFolder(folder);
     }
 

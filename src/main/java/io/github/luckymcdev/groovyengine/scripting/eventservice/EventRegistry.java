@@ -28,16 +28,12 @@ public class EventRegistry {
         registerServerTick();
         registerPlayerInteractItem();
         registerEntityDeath();
-
-        fireRegisterItemEvent();
-        fireRegisterBlockEvent();
     }
 
     public static void initClient() {
         clearAllEvents();
 
         registerClientTick();
-        fireRegisterShaderEvent();
     }
 
     public static void clearAllEvents() {
@@ -51,7 +47,7 @@ public class EventRegistry {
         GroovyEntityDeathEvents.clear();
         GroovyRegisterItemEvents.clear();
         GroovyRegisterBlockEvents.clear();
-        GroovyShaderEvents.clear(); // Clear shader events
+        GroovyShaderEvents.clear();
     }
 
     // --- SERVER EVENTS ---
@@ -146,22 +142,5 @@ public class EventRegistry {
             EventContext ctx = new EventContext("clientTick");
             GroovyClientTickEvents.fire(ctx);
         });
-    }
-
-    // --- REGISTRATION EVENTS ---
-
-    private static void fireRegisterItemEvent() {
-        EventContext ctx = new EventContext("registerItem");
-        GroovyRegisterItemEvents.fire(ctx);
-    }
-
-    private static void fireRegisterBlockEvent() {
-        EventContext ctx = new EventContext("registerBlock");
-        GroovyRegisterBlockEvents.fire(ctx);
-    }
-
-    private static void fireRegisterShaderEvent() {
-        EventContext ctx = new EventContext("registerShader");
-        GroovyShaderEvents.fire(ctx);  // New shader registration event firing
     }
 }

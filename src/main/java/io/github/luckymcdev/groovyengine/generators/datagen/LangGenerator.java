@@ -24,9 +24,6 @@ public class LangGenerator {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    /**
-     * Adds or updates a language entry for the given key with the provided display name.
-     */
     public static void addLangEntry(String key, String displayName) {
         try {
             JsonObject langJson;
@@ -38,14 +35,11 @@ public class LangGenerator {
                     langJson = new JsonObject();
                 }
             } else {
-                // If file doesn't exist, create empty JSON object
                 langJson = new JsonObject();
             }
 
-            // Put or overwrite the entry
             langJson.addProperty(key, displayName);
 
-            // Write it back to the lang file
             Files.createDirectories(LANG_FILE.getParent()); // ensure parent folders exist
             Files.writeString(LANG_FILE, GSON.toJson(langJson), StandardCharsets.UTF_8);
 
@@ -54,9 +48,6 @@ public class LangGenerator {
         }
     }
 
-    /**
-     * Converts an item builders name (e.g., "banana_split") to a display name ("Banana Split").
-     */
     public static String toDisplayName(String registryName) {
         String[] parts = registryName.split("_");
         StringBuilder displayName = new StringBuilder();

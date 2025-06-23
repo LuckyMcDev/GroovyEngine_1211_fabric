@@ -1,22 +1,20 @@
 package io.github.luckymcdev.groovyengine.scripting.eventservice;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity; // Added for generic entity events
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.Hand; // Useful for interactions
+import net.minecraft.util.Hand;
 
-// You might consider adding more fields as needed for specific events,
-// or even a Map<String, Object> for very generic data.
 public class EventContext {
-    public final String event; // Name of the event, mostly for debugging
+    public final String event;
     public PlayerEntity player;
     public BlockState block;
     public BlockPos pos;
     public ServerWorld world;
-    public Entity entity; // For entity-related events
-    public Hand hand; // For interaction events
+    public Entity entity;
+    public Hand hand;
 
     public EventContext(String event) {
         this.event = event;

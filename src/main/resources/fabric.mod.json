@@ -8,18 +8,18 @@
 		"Lucky.dev"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://luckymcdev.github.io",
+		"sources": "https://github.com/LuckyMcDev/GroovyEngine_1211_fabric"
 	},
-	"license": "CC0-1.0",
+	"license": "UNKNOWN",
 	"icon": "assets/groovyengine/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "io.github.luckymcdev.groovyengine.GroovyEngine"
+			"io.github.luckymcdev.groovyengine.GroovyEngine"
 		],
 		"client": [
-          "io.github.luckymcdev.groovyengine.GroovyEngineClient"
+			"io.github.luckymcdev.groovyengine.GroovyEngineClient"
 		]
 	},
 	"mixins": [
@@ -30,9 +30,9 @@
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*",
-		"openloader": "*"
+		"openloader": "21.1.5"
 	},
 	"suggests": {
-		"another-mod": "*"
+
 	}
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GroovyEntityDeathEvents { // New event class
+public class GroovyEntityDeathEvents {
     private static final List<Consumer<EventContext>> listeners = new ArrayList<>();
 
     public static void register(Consumer<EventContext> listener) {

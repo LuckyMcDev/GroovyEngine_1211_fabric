@@ -10,8 +10,8 @@ import java.nio.file.Path;
 
 public class GroovyEnginePackRootGenerator {
 
-    private static final int DATAPACK_FORMAT = 36; // For Minecraft 1.21.1 (data packs)
-    private static final int RESOURCEPACK_FORMAT = 26; // For Minecraft 1.21.1 (resource packs)
+    private static final int DATAPACK_FORMAT = 36;
+    private static final int RESOURCEPACK_FORMAT = 26;
 
     public static final Path BASE_PATH = FabricLoader.getInstance()
             .getGameDir()

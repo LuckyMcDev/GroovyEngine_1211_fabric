@@ -35,7 +35,6 @@ public class GroovyEngineClient implements ClientModInitializer {
             MainEditorImGui.render();
         });
 
-        // Init Client Events
         EventRegistry.initClient();
         fireRegisterShaderEvent();
 
@@ -44,6 +43,6 @@ public class GroovyEngineClient implements ClientModInitializer {
 
     private static void fireRegisterShaderEvent() {
         EventContext ctx = new EventContext("registerShader");
-        GroovyShaderEvents.fire(ctx);  // New shader registration event firing
+        GroovyShaderEvents.fire(ctx);
     }
 }

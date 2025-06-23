@@ -19,7 +19,7 @@ public class GroovyClientTickEvents { // Renamed for clarity
             try {
                 l.accept(ctx);
             } catch (Exception e) {
-                // Use your logger for error reporting
+
                 GroovyEngine.LOGGER.error("Error firing ClientTick event to listener: {}", e.getMessage(), e);
             }
         }

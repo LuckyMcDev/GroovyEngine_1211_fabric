@@ -29,7 +29,7 @@ public class KeyInputHandler {
                 boolean isPressed = InputUtil.isKeyPressed(mc.getWindow().getHandle(), keyCode);
                 boolean wasPressed = lastKeyState.getOrDefault(keyName, false);
 
-                if (isPressed && !wasPressed) { // Key just pressed
+                if (isPressed && !wasPressed) {
                     Closure<?> callback = keyListeners.get(keyName);
                     try {
                         callback.call();

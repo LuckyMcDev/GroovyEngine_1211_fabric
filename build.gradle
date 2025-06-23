@@ -48,7 +48,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// openloader for data and resourcepacks
-	modImplementation "net.darkhax.openloader:openloader-fabric-1.21.1:21.1.5"
+	modImplementation "net.darkhax.openloader:openloader-fabric-${project.minecraft_version}:${project.openloader_version}"
 
 
 	//TODO: FIX THIS SHIT TO INCLUDE IN THE JAR!

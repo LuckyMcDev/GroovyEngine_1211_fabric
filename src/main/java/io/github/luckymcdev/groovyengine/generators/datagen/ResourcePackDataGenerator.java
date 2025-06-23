@@ -18,12 +18,7 @@ public class ResourcePackDataGenerator {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    /**
-     * Generates the item model JSON file for the given item name and texture path.
-     *
-     * @param itemName    The builders name of the item (e.g., "banana").
-     * @param texturePath The texture path in "modid:item/banana" format.
-     */
+
     public static void generateItemModel(String itemName, String texturePath) {
         try {
             Path modelsDir = RESOURCEPACK_PATH.resolve("assets/groovyengine/models/item");
@@ -58,7 +53,6 @@ public class ResourcePackDataGenerator {
             Path modelFile = modelsDir.resolve(blockName + ".json");
             Files.writeString(modelFile, GSON.toJson(modelJson));
 
-            // Also generate blockstate JSON
             Path blockstateDir = RESOURCEPACK_PATH.resolve("assets/groovyengine/blockstates");
             Files.createDirectories(blockstateDir);
 

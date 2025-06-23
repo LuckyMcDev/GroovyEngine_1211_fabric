@@ -72,22 +72,13 @@ public class GroovyScriptManager {
     private static SandboxClassLoader createSandboxLoader(Path scriptBaseDir) {
         URL[] scriptUrls = new URL[]{};
         try {
-            // Convert the script's base directory to a URL.
-            // This allows the SandboxClassLoader to find compiled script classes or other local resources.
+
             scriptUrls = new URL[]{scriptBaseDir.toUri().toURL()};
         } catch (IOException e) {
             GroovyEngine.LOGGER.error("Failed to convert script base directory to URL: {}", scriptBaseDir, e);
-            // If conversion fails, proceed with an empty URL array.
-            // This means the SandboxClassLoader won't be able to load classes from the script's local path,
-            // but it will still enforce restrictions on classes loaded by its parent.
         }
 
-        // The parent ClassLoader for the SandboxClassLoader should typically be the application's
-        // default ClassLoader. This allows it to load safe core Java and Minecraft classes
-        // (which are then filtered by the SandboxClassLoader's rules).
         ClassLoader parentClassLoader = GroovyScriptManager.class.getClassLoader();
-        // Alternatively, for a slightly different hierarchy:
-        // ClassLoader parentClassLoader = Thread.currentThread().getContextClassLoader();
 
         return new SandboxClassLoader(scriptUrls, parentClassLoader);
     }
@@ -219,7 +210,7 @@ public class GroovyScriptManager {
 
             try {
                 Script script = shell.parse(mainScriptPath.toFile());
-                Object result = script.run(); // executes top-level code and returns last value
+                Object result = script.run();
 
                 if (result instanceof GroovyEngineInitializer initializer) {
                     initializer.onInitialize();
@@ -249,15 +240,23 @@ public class GroovyScriptManager {
 
             if (!Files.exists(mainScriptPath)) {
                 String mainScript = """
-                import io.github.luckymcdev.groovyengine.scripting.core.GroovyEngineInitializer
-
-                class Main extends GroovyEngineInitializer {
-                    @Override
-                    void onInitialize() {
-                        Logger.info("Hello from Main.groovy!")
-                    }
-                }
-                """;
+                        package scripts
+                                
+                                import io.github.luckymcdev.groovyengine.scripting.core.GroovyEngineInitializer
+                                
+                                Logger.info("This is now also working, as the bindings are not fucked anymore")
+                                
+                                class MainInitializer extends GroovyEngineInitializer {
+                                    @Override
+                                    void onInitialize() {
+                                        println("This is now Working?")
+                                    }
+                                
+                                }
+                                
+                                return new MainInitializer()
+                                
+                        """;
                 Files.writeString(mainScriptPath, mainScript, StandardCharsets.UTF_8);
                 GroovyEngine.LOGGER.info("[GroovyEngine] Created default Main.groovy");
             }

@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ShaderRegistry {
-    // Keep insertion order to display shaders consistently
     private static final Map<String, ShaderBuilder> shaders = new LinkedHashMap<>();
 
     public static void register(String id, ShaderBuilder builder) {

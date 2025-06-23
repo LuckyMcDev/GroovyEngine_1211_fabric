@@ -47,7 +47,6 @@ public class SandboxClassLoader extends URLClassLoader {
             "groovy.lang.GroovyClassLoader"
     );
 
-    // Package prefixes that are explicitly forbidden. Loading any class from these packages will fail.
     private static final Set<String> FORBIDDEN_PACKAGE_PREFIXES = Set.of(
             "java.io.",
             "java.net.",
@@ -66,11 +65,11 @@ public class SandboxClassLoader extends URLClassLoader {
     );
 
     private static final Set<String> ALLOWED_PACKAGE_PREFIXES = Set.of(
-            "java.lang.", // Core Java types (String, Integer, etc.)
-            "java.util.", // Collections, UUID, Duration, etc.
-            "java.math.", // BigInteger, BigDecimal
-            "groovy.lang.", // Core Groovy runtime types
-            "groovy.transform.stc.", // For Static Type Checking (if you need it)
+            "java.lang.",
+            "java.util.",
+            "java.math.",
+            "groovy.lang.",
+            "groovy.transform.stc.",
             "net.minecraft.block.",
             "net.minecraft.item.",
             "net.minecraft.util.",
@@ -80,8 +79,8 @@ public class SandboxClassLoader extends URLClassLoader {
             "net.minecraft.particle.",
             "net.minecraft.registry.",
             "com.mojang.brigadier.",
-            "org.joml.", // JOML types
-            "imgui.", // ImGui classes (if you expose them)
+            "org.joml.",
+            "imgui.",
             "io.github.luckymcdev.groovyengine.scripting.builders.",
             "io.github.luckymcdev.groovyengine.scripting.eventservice.events.",
             "io.github.luckymcdev.groovyengine.scripting.gui.",
@@ -98,25 +97,17 @@ public class SandboxClassLoader extends URLClassLoader {
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        // 1. Check if the class is already loaded by this classloader
         Class<?> loadedClass = findLoadedClass(name);
         if (loadedClass != null) {
             return loadedClass;
         }
-
-        // 2. Security Checks (Order matters here!)
-        // First, explicitly forbidden classes
         if (FORBIDDEN_CLASSES.contains(name)) {
             GroovyEngine.LOGGER.warn("Sandbox: Denying load of forbidden class: {}", name);
             throw new SecurityException("Access to forbidden class: " + name + " is denied by sandbox.");
         }
 
-        // Then, forbidden packages
         for (String prefix : FORBIDDEN_PACKAGE_PREFIXES) {
             if (name.startsWith(prefix)) {
-                // If it's a forbidden package, ensure it's not also in an allowed prefix.
-                // This prevents cases where a safe class could be within a forbidden package
-                // (less common but good for robustness).
                 boolean isExplicitlyAllowed = ALLOWED_PACKAGE_PREFIXES.stream().anyMatch(name::startsWith);
                 if (!isExplicitlyAllowed) {
                     GroovyEngine.LOGGER.warn("Sandbox: Denying load of class from forbidden package: {}", name);
@@ -125,57 +116,40 @@ public class SandboxClassLoader extends URLClassLoader {
             }
         }
 
-        // 3. Try to load from this classloader's URLs (i.e., the script classes themselves)
+
         try {
-            // findClass will only look in the URLs provided to this classloader
             Class<?> c = findClass(name);
             if (resolve) {
                 resolveClass(c);
             }
             return c;
-        } catch (ClassNotFoundException e) {
-            // Not found in our URLs, proceed to parent
+        } catch (ClassNotFoundException ignored) {
+
         }
 
 
-        // 4. Delegate to parent for system classes or explicitly allowed classes
-        // This is crucial: parent classloader should load standard library classes,
-        // unless they are explicitly forbidden by our rules above.
         try {
-            // Check if the class being requested is one of our explicitly allowed prefixes
             boolean isAllowedPrefix = ALLOWED_PACKAGE_PREFIXES.stream().anyMatch(name::startsWith);
 
-            // If it's an allowed prefix OR not caught by forbidden rules,
-            // try loading it via the parent classloader.
-            // This allows the script to use safe standard Java/Minecraft APIs.
             if (isAllowedPrefix ||
                     !(FORBIDDEN_CLASSES.contains(name) ||
                             FORBIDDEN_PACKAGE_PREFIXES.stream().anyMatch(name::startsWith))
             ) {
                 return super.loadClass(name, resolve);
             } else {
-                // This branch should ideally not be reached if the forbidden checks above are comprehensive,
-                // but acts as a final safeguard.
+
                 GroovyEngine.LOGGER.warn("Sandbox: Denying load of class: {} (not explicitly allowed and not found in script sources)", name);
                 throw new SecurityException("Class: " + name + " cannot be loaded by sandbox. (Default Deny)");
             }
 
         } catch (ClassNotFoundException e) {
-            // Class not found by parent either.
             throw new ClassNotFoundException("Class " + name + " not found by any classloader in sandbox.", e);
         }
     }
 
-    /**
-     * Override getPermissions if you plan to use a Java Security Manager along with this ClassLoader.
-     * This method defines what permissions code loaded by this ClassLoader will have.
-     * For now, we'll keep it simple (granting no special permissions), as the ClassLoader itself is the main guard.
-     */
     @Override
     protected java.security.PermissionCollection getPermissions(CodeSource codesource) {
-        // By default, grant no specific permissions beyond what is inherited
-        // if a SecurityManager is active. The ClassLoader's primary role
-        // is to prevent class loading, not to grant/deny runtime permissions.
-        return new Permissions(); // An empty Permissions object effectively denies all
+
+        return new Permissions();
     }
 }

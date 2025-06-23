@@ -20,16 +20,10 @@ import org.slf4j.LoggerFactory;
 public class GroovyEngine implements ModInitializer {
 	public static final String MODID = "groovyengine";
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
     @Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
 		LogCapture.hookLog4j();
 
 		LOGGER.info("Generating Pack Structure");
@@ -67,7 +61,6 @@ public class GroovyEngine implements ModInitializer {
 
 
 	// --- REGISTRATION EVENTS ---
-
 	private static void fireRegisterItemEvent() {
 		EventContext ctx = new EventContext("registerItem");
 		GroovyRegisterItemEvents.fire(ctx);

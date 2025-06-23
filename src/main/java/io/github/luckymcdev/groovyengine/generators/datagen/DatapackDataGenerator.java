@@ -24,15 +24,7 @@ public class DatapackDataGenerator {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    /**
-     * Generates a shaped crafting recipe JSON file.
-     *
-     * @param recipeId The full identifier for the recipe (e.g., "my_mod:my_recipe").
-     * @param pattern  A list of strings representing the crafting grid pattern (e.g., ["AAA", "BBB", "CCC"]).
-     * @param key      A map of characters to item/tag identifiers (e.g., {'A': 'minecraft:iron_ingot'}).
-     * @param resultId The identifier of the output item (e.g., "minecraft:iron_block").
-     * @param count    The number of output items.
-     */
+
     public static void generateShapedRecipe(Identifier recipeId, String[] pattern, Map<Character, String> key, Identifier resultId, int count) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "minecraft:crafting_shaped");
@@ -55,7 +47,6 @@ public class DatapackDataGenerator {
         }
         recipeJson.add("key", keyObject);
 
-        // Explicitly build the result object for shaped recipes
         JsonObject resultObject = new JsonObject();
         resultObject.addProperty("id", resultId.toString());
         if (count > 1) {
@@ -66,14 +57,7 @@ public class DatapackDataGenerator {
         writeRecipeFile(DATAPACK_RECIPES_DIR, recipeId, recipeJson);
     }
 
-    /**
-     * Generates a shapeless crafting recipe JSON file.
-     *
-     * @param recipeId    The full identifier for the recipe.
-     * @param ingredients A list of item/tag identifiers (e.g., ["minecraft:diamond", "minecraft:stick"]).
-     * @param resultId    The identifier of the output item.
-     * @param count       The number of output items.
-     */
+
     public static void generateShapelessRecipe(Identifier recipeId, String[] ingredients, Identifier resultId, int count) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "minecraft:crafting_shapeless");
@@ -90,7 +74,6 @@ public class DatapackDataGenerator {
         }
         recipeJson.add("ingredients", ingredientsArray);
 
-        // Explicitly build the result object for shapeless recipes
         JsonObject resultObject = new JsonObject();
         resultObject.addProperty("id", resultId.toString());
         if (count > 1) {
@@ -101,16 +84,7 @@ public class DatapackDataGenerator {
         writeRecipeFile(DATAPACK_RECIPES_DIR, recipeId, recipeJson);
     }
 
-    /**
-     * Generates a cooking recipe JSON file (smelting, blasting, smoking, campfire_cooking).
-     *
-     * @param recipeId    The full identifier for the recipe.
-     * @param type        The recipe type (e.g., "minecraft:smelting", "minecraft:blasting").
-     * @param ingredient  The item/tag identifier for the input.
-     * @param resultId    The identifier of the output item.
-     * @param experience  The experience gained.
-     * @param cookingTime The time in ticks.
-     */
+
     public static void generateCookingRecipe(Identifier recipeId, String type, String ingredient, Identifier resultId, float experience, int cookingTime) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", type);
@@ -123,13 +97,8 @@ public class DatapackDataGenerator {
         }
         recipeJson.add("ingredient", ingredientObject);
 
-        // Explicitly build the result object for cooking recipes
         JsonObject resultObject = new JsonObject();
         resultObject.addProperty("id", resultId.toString());
-        // For cooking recipes, 'count' property is usually only added if it's > 1.
-        // If your builder allows setting count for cooking, you'd add:
-        // if (count > 1) { resultObject.addProperty("count", count); }
-        // For now, assuming default count of 1.
         recipeJson.add("result", resultObject);
 
         recipeJson.addProperty("experience", experience);
@@ -141,10 +110,9 @@ public class DatapackDataGenerator {
     private static void writeRecipeFile(Path directory, Identifier id, JsonObject json) {
         Path jsonFile = directory.resolve(id.getPath() + ".json");
         try {
-            Files.createDirectories(directory); // Ensure the recipe directory exists just before writing
+            Files.createDirectories(directory);
 
-            String jsonString = GSON.toJson(json); // Capture the JSON string
-            // Log the full JSON string to debug exactly what's being written
+            String jsonString = GSON.toJson(json);
             GroovyEngine.LOGGER.debug("Attempting to write recipe {}. Generated JSON:\n{}", id, jsonString);
 
             Files.writeString(jsonFile, jsonString, StandardCharsets.UTF_8);

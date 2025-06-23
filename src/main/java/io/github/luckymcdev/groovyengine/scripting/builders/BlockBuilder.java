@@ -18,7 +18,7 @@ public class BlockBuilder {
     private final String name;
     private AbstractBlock.Settings settings;
     private String displayName;
-    private String texturePath;  // e.g. "groovyengine:block/banana_block"
+    private String texturePath;
 
     private Block block;
 
@@ -63,19 +63,16 @@ public class BlockBuilder {
             block = new Block(settings);
             registry.register(name, block);
 
-            // Create and register a BlockItem
-            Item.Settings itemSettings = new Item.Settings(); // You might want to allow this to be configurable too
+            Item.Settings itemSettings = new Item.Settings();
             BlockItem blockItem = new BlockItem(block, itemSettings);
-            new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID).register(name, blockItem); // Register the item with the same name
+            new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID).register(name, blockItem);
 
-            // Lang entry
             if (displayName != null) {
                 LangGenerator.addLangEntry("block." + GroovyEngine.MODID + "." + name, displayName);
             } else {
                 LangGenerator.addLangEntry("block." + GroovyEngine.MODID + "." + name, LangGenerator.toDisplayName(name));
             }
 
-            // Generate block model JSON for blockstate and model
             ResourcePackDataGenerator.generateBlockModel(name, texturePath != null ? texturePath : GroovyEngine.MODID + ":block/" + name);
         }
         return block;

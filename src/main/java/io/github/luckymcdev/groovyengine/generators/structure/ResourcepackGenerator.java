@@ -13,9 +13,8 @@ public class ResourcepackGenerator {
             .resolve("assets")
             .resolve(GroovyEngine.MODID);
 
-    public static void generate() { // Renamed method from generateResourcePack to generate
+    public static void generate() {
         try {
-            // Ensure base assets folders are created under the pack root
             Files.createDirectories(ASSETS_ROOT.resolve("textures/item"));
             Files.createDirectories(ASSETS_ROOT.resolve("textures/block"));
             Files.createDirectories(ASSETS_ROOT.resolve("models/item"));
@@ -23,7 +22,6 @@ public class ResourcepackGenerator {
             Files.createDirectories(ASSETS_ROOT.resolve("lang"));
             Files.createDirectories(ASSETS_ROOT.resolve("shaders/post"));
 
-            // Create or overwrite en_us.json with empty JSON object if it doesn't exist
             Path langFile = ASSETS_ROOT.resolve("lang/en_us.json");
             if (Files.notExists(langFile)) {
                 Files.writeString(langFile, "{}", StandardCharsets.UTF_8);

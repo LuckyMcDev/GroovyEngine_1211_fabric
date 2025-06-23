@@ -12,8 +12,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.Hand;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 public class EventRegistry {
@@ -79,7 +77,7 @@ public class EventRegistry {
                         .withPos(pos)
                         .withBlock(state)
                         .withHand(hand);
-                GroovyBlockPlaceEvents.fire(ctx); // Fixed to block place events
+                GroovyBlockPlaceEvents.fire(ctx);
             }
             return ActionResult.PASS;
         });

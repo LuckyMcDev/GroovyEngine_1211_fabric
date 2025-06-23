@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GroovyServerTickEvents { // Renamed for clarity
+public class GroovyServerTickEvents {
     private static final List<Consumer<EventContext>> listeners = new ArrayList<>();
 
     public static void register(Consumer<EventContext> listener) {

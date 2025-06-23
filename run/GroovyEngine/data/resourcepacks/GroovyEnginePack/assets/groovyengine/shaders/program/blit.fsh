@@ -12,13 +12,11 @@ float rand(vec2 co) {
 }
 
 void main() {
-    // Slight barrel distortion
     vec2 uv = texCoord - 0.5;
     float dist = dot(uv, uv);
     uv += uv * dist * 0.2;
     uv += 0.5;
 
-    // RGB color shift
     float shift = 1.0 / InSize.x;
     float r = texture(DiffuseSampler, uv + vec2(shift, 0)).r;
     float g = texture(DiffuseSampler, uv).g;
@@ -26,11 +24,9 @@ void main() {
 
     vec3 color = vec3(r, g, b);
 
-    // Scanline effect
     float scanline = sin(texCoord.y * InSize.y * 1.5) * 0.04;
     color -= scanline;
 
-    // Slight flicker
     float flicker = 0.02 * rand(vec2(Time, texCoord.y));
     color *= 1.0 - flicker;
 

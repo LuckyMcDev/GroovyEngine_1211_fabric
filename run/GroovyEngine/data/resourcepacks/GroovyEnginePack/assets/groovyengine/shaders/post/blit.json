@@ -1,7 +1,5 @@
 {
-  "targets": [
-    "swap"
-  ],
+  "targets": ["swap"],
   "passes": [
     {
       "name": "groovyengine:blit",

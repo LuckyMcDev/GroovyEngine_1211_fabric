@@ -38,6 +38,8 @@ repositories {
 	}
 }
 
+def groovyLibs = fileTree(dir: 'lib', include: ['groovy-*.jar'])
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -51,10 +53,8 @@ dependencies {
 	modImplementation "net.darkhax.openloader:openloader-fabric-${project.minecraft_version}:${project.openloader_version}"
 
 
-	//TODO: FIX THIS SHIT TO INCLUDE IN THE JAR!
-	//include( implementation files('lib/groovy-5.0.0-alpha-1.jar') )
-	// Groovy (for scripting)
-	implementation fileTree(dir: 'lib', include: ['*.jar'])
+	implementation groovyLibs
+
 
 	include(implementation "io.github.spair:imgui-java-binding:${project.imgui_version}")
 	include(implementation "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}") {
@@ -93,10 +93,14 @@ java {
 }
 
 jar {
-	inputs.property "archivesName", project.base.archivesName
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	from(groovyLibs.files.collect { zipTree(it) }) {
+		exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+	}
 
 	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}"}
+		rename { "${it}_${project.archivesBaseName}" }
 	}
 }
 

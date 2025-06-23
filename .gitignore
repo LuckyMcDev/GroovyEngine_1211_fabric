@@ -29,11 +29,7 @@ bin/
 *.DS_Store
 
 # fabric
-
-run/
-
-!run/GroovyEngine/
-!run/GroovyEngine/**
+/run
 
 # java
 
@@ -41,3 +37,5 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+

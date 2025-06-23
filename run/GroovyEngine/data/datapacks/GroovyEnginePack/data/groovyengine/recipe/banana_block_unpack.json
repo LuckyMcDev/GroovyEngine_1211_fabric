@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "groovyengine:banana_block"
+    }
+  ],
+  "result": {
+    "id": "groovyengine:banana",
+    "count": 9
+  }
+}

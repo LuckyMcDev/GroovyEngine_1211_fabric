@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "BBB",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "groovyengine:banana"
+    }
+  },
+  "result": {
+    "id": "groovyengine:banana_block"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "groovyengine:banana"
+  },
+  "result": {
+    "id": "minecraft:cooked_rabbit"
+  },
+  "experience": 0.3,
+  "cookingtime": 100
+}

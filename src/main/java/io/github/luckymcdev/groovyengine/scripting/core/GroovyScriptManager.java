@@ -2,12 +2,13 @@ package io.github.luckymcdev.groovyengine.scripting.core;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.brigadier.Command;
 import groovy.lang.*;
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
 import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderBuilder;
 import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderRegistry;
-import io.github.luckymcdev.groovyengine.scripting.eventservice.events.*;
+import io.github.luckymcdev.groovyengine.scripting.events.*;
 import io.github.luckymcdev.groovyengine.scripting.builders.RecipeBuilder;
 import io.github.luckymcdev.groovyengine.scripting.security.SandboxClassLoader;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
@@ -27,6 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 
+import net.minecraft.util.ActionResult;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
@@ -128,6 +130,20 @@ public class GroovyScriptManager {
         binding.setVariable("Duration", Duration.class);
         binding.setVariable("Math", Math.class);
 
+
+        // --- Events ---
+
+        binding.setVariable("CommandEvents", CommandEvents.class);
+        binding.setVariable("ConnectionEvents", ConnectionEvents.class);
+        binding.setVariable("GuiEvents", GuiEvents.class);
+        binding.setVariable("LootEvents", LootEvents.class);
+        binding.setVariable("PlayerEvents", PlayerEvents.class);
+        binding.setVariable("TickEvents", TickEvents.class);
+        binding.setVariable("WorldEvents", WorldEvents.class);
+
+
+        binding.setVariable("ActionResult", ActionResult.class);
+
         // --- Builders ---
 
         RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID);
@@ -142,20 +158,6 @@ public class GroovyScriptManager {
 
         binding.setVariable("ShaderBuilder", ShaderBuilder.class);
         binding.setVariable("ShaderRegistry", ShaderRegistry.class);
-
-        // --- Events ---
-
-        binding.setVariable("BlockBreakEvents", GroovyBlockBreakEvents.class);
-        binding.setVariable("BlockPlaceEvents", GroovyBlockPlaceEvents.class);
-        binding.setVariable("ClientTickEvents", GroovyClientTickEvents.class);
-        binding.setVariable("EntityDeathEvents", GroovyEntityDeathEvents.class);
-        binding.setVariable("PlayerInteractItemEvents", GroovyPlayerInteractItemEvents.class);
-        binding.setVariable("PlayerJoinEvents", GroovyPlayerJoinEvents.class);
-        binding.setVariable("PlayerLeaveEvents", GroovyPlayerLeaveEvents.class);
-        binding.setVariable("RegisterBlockEvents", GroovyRegisterBlockEvents.class);
-        binding.setVariable("RegisterItemEvents", GroovyRegisterItemEvents.class);
-        binding.setVariable("ServerTickEvents", GroovyServerTickEvents.class);
-
 
         // --- Mc classes ---
 

@@ -24,4 +24,14 @@ Drop Groovy scripts in:
 
 Scripts are auto-discovered and executed based on their content and location (e.g., client/server).
 
-> For examples, see the `run/GroovyEngine` folder on the GitHub.
+
+### Quick Example:
+
+```groovy
+
+PlayerEvents.onItemUse { ctx ->
+    Logger.info("PlayerEvents: Item Used by ${ctx.player} with hand ${ctx.hand} - Event: ${ctx.event}")
+    return new TypedActionResult<ItemStack>(ActionResult.PASS, ctx.player.getStackInHand(ctx.hand))
+}
+```
+> For more examples, see the `run/GroovyEngine` folder on the GitHub.

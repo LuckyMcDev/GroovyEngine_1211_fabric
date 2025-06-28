@@ -2,21 +2,34 @@ package io.github.luckymcdev.groovyengine.scripting.events;
 
 import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.event.player.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.item.ItemStack;
 import groovy.lang.Closure;
 
 public class PlayerEvents {
 
-    public static void onBlockBreak(Closure<Void> closure) {
-        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, entity) -> {
+    public static void onBlockBreak(Closure<?> closure) {
+        PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> {
             EventContext ctx = new EventContext("block_break")
                     .withPlayer(player)
                     .withWorld(world)
                     .withPos(pos)
                     .withBlockState(state)
-                    .withBlockEntity(entity);
-            closure.call(ctx);
+                    .withBlockEntity(blockEntity);
+
+            Object result = closure.call(ctx);
+
+            if (result instanceof ActionResult) {
+                ActionResult action = (ActionResult) result;
+                return action != ActionResult.FAIL; // false = cancel
+            }
+
+            // fallback to default
+            return true;
         });
     }
+
 
     public static void onBlockUse(Closure<?> closure) {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -25,7 +38,8 @@ public class PlayerEvents {
                     .withWorld(world)
                     .withHand(hand)
                     .withBlockHitResult(hitResult);
-            return (net.minecraft.util.ActionResult) closure.call(ctx);
+            Object result = closure.call(ctx);
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 
@@ -35,7 +49,9 @@ public class PlayerEvents {
                     .withPlayer(player)
                     .withWorld(world)
                     .withHand(hand);
-            return (net.minecraft.util.TypedActionResult) closure.call(ctx);
+            Object result = closure.call(ctx);
+            return result instanceof TypedActionResult ? (TypedActionResult<ItemStack>) result :
+                    new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         });
     }
 
@@ -47,7 +63,8 @@ public class PlayerEvents {
                     .withHand(hand)
                     .withEntity(entity)
                     .withEntityHitResult(hitResult);
-            return (net.minecraft.util.ActionResult) closure.call(ctx);
+            Object result = closure.call(ctx);
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 
@@ -59,7 +76,8 @@ public class PlayerEvents {
                     .withHand(hand)
                     .withEntity(entity)
                     .withEntityHitResult(hitResult);
-            return (net.minecraft.util.ActionResult) closure.call(ctx);
+            Object result = closure.call(ctx);
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 
@@ -71,7 +89,8 @@ public class PlayerEvents {
                     .withHand(hand)
                     .withPos(pos)
                     .withDirection(direction);
-            return (net.minecraft.util.ActionResult) closure.call(ctx);
+            Object result = closure.call(ctx);
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 }

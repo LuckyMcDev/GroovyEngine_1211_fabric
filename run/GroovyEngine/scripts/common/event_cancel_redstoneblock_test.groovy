@@ -1,3 +1,4 @@
+//priority=100
 
 import net.minecraft.block.Blocks
 

@@ -1,4 +1,4 @@
-package scripts.client
+//priority=3
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 

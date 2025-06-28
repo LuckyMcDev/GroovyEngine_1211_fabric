@@ -39,6 +39,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -212,9 +214,32 @@ public class GroovyScriptManager {
         }
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(folder, "*.groovy")) {
-            boolean foundScripts = false;
-            for (Path script : stream) {
-                foundScripts = true;
+            List<Path> scripts = new ArrayList<>();
+            for (Path path : stream) {
+                scripts.add(path);
+            }
+
+            if (scripts.isEmpty()) {
+                GroovyEngine.LOGGER.info("[GroovyEngine] No .groovy scripts found in folder: " + folder.toAbsolutePath());
+                return;
+            }
+
+            // Sort by priority from first-line comment
+            scripts.sort(Comparator.comparingInt(GroovyScriptManager::getPriority));
+
+            // Log order
+            GroovyEngine.LOGGER.info("[GroovyEngine] Script load order in folder '{}':", folder.getFileName());
+            for (Path path : scripts) {
+                int prio = getPriority(path);
+                GroovyEngine.LOGGER.info("  - {} (priority={})", path.getFileName(), prio);
+            }
+
+            for (Path script : scripts) {
+                if (isDisabledScript(script)) {
+                    GroovyEngine.LOGGER.info("[GroovyEngine] Skipping disabled script: {}", script.getFileName());
+                    continue;
+                }
+
                 GroovyEngine.LOGGER.info("[GroovyEngine] Loading script: {}", script.getFileName());
                 GroovyShell shell = createShell(script);
                 try {
@@ -224,11 +249,36 @@ public class GroovyScriptManager {
                     GroovyEngine.LOGGER.error("[GroovyEngine] Error loading script: " + script.getFileName(), e);
                 }
             }
-            if (!foundScripts) {
-                GroovyEngine.LOGGER.info("[GroovyEngine] No .groovy scripts found in folder: " + folder.toAbsolutePath());
-            }
+
         } catch (IOException e) {
             GroovyEngine.LOGGER.error("[GroovyEngine] Failed to read scripts from folder: " + folder.toAbsolutePath(), e);
         }
+    }
+
+
+    private static int getPriority(Path script) {
+        try {
+            List<String> lines = Files.readAllLines(script, StandardCharsets.UTF_8);
+            if (!lines.isEmpty()) {
+                String first = lines.get(0).trim();
+                if (first.startsWith("//priority=")) {
+                    return Integer.parseInt(first.substring("//priority=".length()).trim());
+                }
+            }
+        } catch (Exception ignored) {}
+        return 0;
+    }
+
+    private static boolean isDisabledScript(Path script) {
+        try {
+            List<String> lines = Files.readAllLines(script, StandardCharsets.UTF_8);
+            for (String line : lines) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                if (line.equalsIgnoreCase("//disabled")) return true;
+                break; // Stop after first non-empty line
+            }
+        } catch (IOException ignored) {}
+        return false;
     }
 }

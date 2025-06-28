@@ -1,3 +1,4 @@
+//disabled
 
 import net.minecraft.util.ActionResult
 import net.minecraft.util.TypedActionResult

@@ -1,6 +1,4 @@
-package scripts.client
-
-
+//priority=2
 
 Logger.info("This is a log line from the ingame editor")
 

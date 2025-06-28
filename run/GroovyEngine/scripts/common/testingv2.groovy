@@ -1,4 +1,4 @@
-
+//priority=1
 
 BlockBuilder.register("banana_block")
         .displayName("Banana Block")

@@ -25,11 +25,9 @@ public class GroovyEngine implements ModInitializer {
 
 		OpenloaderConfigPatcher.patch();
 
-
 		LOGGER.info("Generating Pack Structure");
 		GroovyEnginePackRootGenerator.generate();
 		ResourcepackGenerator.generate();
-		DatapackGenerator.generate();
 
 		System.out.println("Loading Scripts");
 		GroovyScriptManager.initialize();

@@ -1,4 +1,4 @@
-package scripts.client
+
 
 BlockBuilder.register("banana_block")
         .displayName("Banana Block")

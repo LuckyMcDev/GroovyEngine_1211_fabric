@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.editor.core;
 
-import io.github.luckymcdev.groovyengine.editor.windows.BlockDisplayBrowserWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.ConsoleWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.DocsWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.EditorWindow;
@@ -31,7 +30,6 @@ public class MainEditorImGui {
 
             if (showConsole) ConsoleWindow.render();
             if (showDocs) DocsWindow.render();
-            if (showBlockBrowser) BlockDisplayBrowserWindow.render();
             if (showShaderEditor) ShaderWindow.render();
             if (showEditorWindow) EditorWindow.draw();
 

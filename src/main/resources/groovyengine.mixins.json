@@ -3,13 +3,13 @@
   "package": "io.github.luckymcdev.groovyengine.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ExampleMixin",
-    "imgui.MinecraftClientMixin",
-    "rendering.EntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
+    "ExampleMixin",
+    "imgui.MinecraftClientMixin",
+    "rendering.EntityRendererMixin"
   ]
 }

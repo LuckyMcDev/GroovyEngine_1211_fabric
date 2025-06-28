@@ -1,27 +1,41 @@
 package io.github.luckymcdev.groovyengine.scripting.events;
 
+import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import groovy.lang.Closure;
 
 public class TickEvents {
 
-    // Client Tick Start
-    public static void onStartClientTick(groovy.lang.Closure<?> closure) {
-        ClientTickEvents.START_CLIENT_TICK.register(closure::call);
+    public static void onStartClientTick(Closure<Void> closure) {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            EventContext ctx = new EventContext("client_tick_start")
+                    .withClient(client);
+            closure.call(ctx);
+        });
     }
 
-    // Client Tick End
-    public static void onEndClientTick(groovy.lang.Closure<?> closure) {
-        ClientTickEvents.END_CLIENT_TICK.register(closure::call);
+    public static void onEndClientTick(Closure<Void> closure) {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            EventContext ctx = new EventContext("client_tick_end")
+                    .withClient(client);
+            closure.call(ctx);
+        });
     }
 
-    // Server Tick Start
-    public static void onStartServerTick(groovy.lang.Closure<?> closure) {
-        ServerTickEvents.START_SERVER_TICK.register(closure::call);
+    public static void onStartServerTick(Closure<Void> closure) {
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            EventContext ctx = new EventContext("server_tick_start")
+                    .withServer(server);
+            closure.call(ctx);
+        });
     }
 
-    // Server Tick End
-    public static void onEndServerTick(groovy.lang.Closure<?> closure) {
-        ServerTickEvents.END_SERVER_TICK.register(closure::call);
+    public static void onEndServerTick(Closure<Void> closure) {
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            EventContext ctx = new EventContext("server_tick_end")
+                    .withServer(server);
+            closure.call(ctx);
+        });
     }
 }

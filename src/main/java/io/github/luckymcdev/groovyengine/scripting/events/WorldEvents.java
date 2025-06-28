@@ -1,13 +1,26 @@
 package io.github.luckymcdev.groovyengine.scripting.events;
 
+import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import groovy.lang.Closure;
 
 public class WorldEvents {
-    public static void onLoad(ServerWorldEvents.Load callback) {
-        ServerWorldEvents.LOAD.register(callback);
+
+    public static void onLoad(Closure<Void> closure) {
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            EventContext ctx = new EventContext("world_load")
+                    .withServer(server)
+                    .withServerWorld(world);
+            closure.call(ctx);
+        });
     }
 
-    public static void onUnload(ServerWorldEvents.Unload callback) {
-        ServerWorldEvents.UNLOAD.register(callback);
+    public static void onUnload(Closure<Void> closure) {
+        ServerWorldEvents.UNLOAD.register((server, world) -> {
+            EventContext ctx = new EventContext("world_unload")
+                    .withServer(server)
+                    .withServerWorld(world);
+            closure.call(ctx);
+        });
     }
 }

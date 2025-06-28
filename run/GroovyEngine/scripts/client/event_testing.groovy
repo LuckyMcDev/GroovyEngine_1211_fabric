@@ -4,95 +4,72 @@ import net.minecraft.item.ItemStack
 
 Logger.info("TestEvents initializing...")
 
-// Tick Events
-TickEvents.onStartClientTick {
-    //Logger.info("TickEvents: Start Client Tick")
-}
-TickEvents.onEndClientTick {
-    //Logger.info("TickEvents: End Client Tick")
+TickEvents.onStartClientTick { ctx ->
+    //Logger.info("TickEvents: Start Client Tick - Event: ${ctx.event}")
 }
 
-// Player Events (CORRECTED)
-PlayerEvents.onBlockBreak { player, world, pos, state, entity ->  // No parentheses
-    Logger.info("PlayerEvents: Block Broken at $pos by $player")
+TickEvents.onEndClientTick { ctx ->
+    //Logger.info("TickEvents: End Client Tick - Event: ${ctx.event}")
 }
 
-PlayerEvents.onBlockUse { player, world, hand, hitResult ->
-    Logger.info("PlayerEvents: Block Used by $player at ${hitResult.blockPos}")
+PlayerEvents.onBlockBreak { ctx ->
+    Logger.info("PlayerEvents: Block Broken at ${ctx.pos} by ${ctx.player} - Event: ${ctx.event}")
+}
+
+PlayerEvents.onBlockUse { ctx ->
+    Logger.info("PlayerEvents: Block Used by ${ctx.player} at ${ctx.blockHitResult.blockPos} - Event: ${ctx.event}")
     return ActionResult.PASS
 }
 
-PlayerEvents.onItemUse { player, world, hand ->
-    Logger.info("PlayerEvents: Item Used by $player with hand $hand")
-    return new TypedActionResult<ItemStack>(ActionResult.PASS, player.getStackInHand(hand))
+PlayerEvents.onItemUse { ctx ->
+    Logger.info("PlayerEvents: Item Used by ${ctx.player} with hand ${ctx.hand} - Event: ${ctx.event}")
+    return new TypedActionResult<ItemStack>(ActionResult.PASS, ctx.player.getStackInHand(ctx.hand))
 }
 
-PlayerEvents.onEntityUse { player, world, hand, entity, hitResult ->
-    Logger.info("PlayerEvents: Entity Used by $player on $entity with hand $hand")
+PlayerEvents.onEntityUse { ctx ->
+    Logger.info("PlayerEvents: Entity Used by ${ctx.player} on ${ctx.entity} with hand ${ctx.hand} - Event: ${ctx.event}")
     return ActionResult.PASS
 }
 
-// CRITICAL FIX: Match Fabric API signature
-PlayerEvents.onEntityAttack { player, world, hand, entity, hitResult ->
-    Logger.info("PlayerEvents: Entity Attacked by $player on $entity with $hand in $world")
+PlayerEvents.onEntityAttack { ctx ->
+    Logger.info("PlayerEvents: Entity Attacked by ${ctx.player} on ${ctx.entity} with ${ctx.hand} in ${ctx.world} - Event: ${ctx.event}")
     return ActionResult.PASS
 }
 
-PlayerEvents.onBlockAttack { player, world, hand, pos, direction ->
-    Logger.info("PlayerEvents: Block Attacked at $pos by $player")
+PlayerEvents.onBlockAttack { ctx ->
+    Logger.info("PlayerEvents: Block Attacked at ${ctx.pos} by ${ctx.player} - Event: ${ctx.event}")
     return ActionResult.PASS
 }
 
-// Connection Events
-ConnectionEvents.onClientJoin { handler, sender, client ->
-    Logger.info("ConnectionEvents: Client joined")
-    return // no return needed
-}
-ConnectionEvents.onClientDisconnect { handler, client ->
-    Logger.info("ConnectionEvents: Client disconnected")
-    return
-}
-ConnectionEvents.onServerJoin { handler, sender, server ->
-    Logger.info("ConnectionEvents: Server joined")
-    return
-}
-ConnectionEvents.onServerDisconnect { handler, server ->
-    Logger.info("ConnectionEvents: Server disconnected")
-    return
+
+ConnectionEvents.onClientJoin { ctx ->
+    Logger.info("ConnectionEvents: Client joined - Event: ${ctx.event}")
 }
 
-// GUI Events
-GuiEvents.onScreenInit { client, screen, scaledWidth, scaledHeight ->
-    Logger.info("GuiEvents: Screen initialized - ${screen?.class?.simpleName}")
-    return
-}
-GuiEvents.onScreenRender { client, screen, matrices, mouseX, mouseY, tickDelta ->
-    // too spammy for logging every frame
-    return
-}
-GuiEvents.onTooltip { stack, lines, context ->
-    lines.add("Tooltip added by GroovyEngine TestEvents")
-    return
+ConnectionEvents.onClientDisconnect { ctx ->
+    Logger.info("ConnectionEvents: Client disconnected - Event: ${ctx.event}")
 }
 
-// Loot Events
-LootEvents.onModify { resourceManager, lootManager, id, table, setter ->
-    Logger.info("LootEvents: Loot Table Modified - $id")
-    return
+ConnectionEvents.onServerJoin { ctx ->
+    Logger.info("ConnectionEvents: Server joined - Player: ${ctx.serverPlayer} - Event: ${ctx.event}")
 }
 
-// World Events
-WorldEvents.onLoad { server, world ->
-    Logger.info("WorldEvents: World Loaded - ${world?.registryKey}")
-    return
-}
-WorldEvents.onUnload { server, world ->
-    Logger.info("WorldEvents: World Unloaded - ${world?.registryKey}")
-    return
+ConnectionEvents.onServerDisconnect { ctx ->
+    Logger.info("ConnectionEvents: Server disconnected - Player: ${ctx.serverPlayer} - Event: ${ctx.event}")
 }
 
-// Command Events
-CommandEvents.onRegister { dispatcher, registryAccess, environment ->
-    Logger.info("CommandEvents: Commands registering")
-    return
+GuiEvents.onScreenInit { ctx ->
+    Logger.info("GuiEvents: Screen initialized - ${ctx.screen?.class?.simpleName} - Event: ${ctx.event}")
+}
+
+WorldEvents.onLoad { ctx ->
+    Logger.info("WorldEvents: World Loaded - ${ctx.serverWorld?.registryKey} - Event: ${ctx.event}")
+}
+
+WorldEvents.onUnload { ctx ->
+    Logger.info("WorldEvents: World Unloaded - ${ctx.serverWorld?.registryKey} - Event: ${ctx.event}")
+}
+
+CommandEvents.onRegister { ctx ->
+    Logger.info("CommandEvents: Commands registering - Event: ${ctx.event}")
 }

@@ -136,7 +136,6 @@ public class GroovyScriptManager {
         binding.setVariable("CommandEvents", CommandEvents.class);
         binding.setVariable("ConnectionEvents", ConnectionEvents.class);
         binding.setVariable("GuiEvents", GuiEvents.class);
-        binding.setVariable("LootEvents", LootEvents.class);
         binding.setVariable("PlayerEvents", PlayerEvents.class);
         binding.setVariable("TickEvents", TickEvents.class);
         binding.setVariable("WorldEvents", WorldEvents.class);

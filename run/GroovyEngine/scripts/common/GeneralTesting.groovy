@@ -15,4 +15,5 @@ def helloWorld() {
     return "Hello from closure!"
 }
 
-Globals.put("helloWorld", " hello !!!!!!!") // store reference
+
+Globals.put("helloWorld", helloWorld()) // store reference

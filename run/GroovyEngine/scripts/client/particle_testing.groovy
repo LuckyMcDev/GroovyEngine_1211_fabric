@@ -9,13 +9,12 @@ TickEvents.onStartClientTick { ctx ->
 
     if (world != null && player != null) {
 
-        def vx = Math.random() * 10
-        def vy = Math.random() * 10
-        def vz = Math.random() * 10
-        Logger.info("Velocity: $vx, $vy, $vz")
+        def vx  = Math.random()
+        def vy = Math.random()
+        def vz = Math.random()
 
         ParticleBuilder.create(world, ctx.client.particleManager)
-                .setType(GroovyParticleTypes.BASE)
+                .setType(GroovyParticleTypes.COLORED)
                 .setPosition(player.getPos())
                 .setVelocity(vx, vy, vz)
                 .setVelocitySpread(1.0f)
@@ -27,6 +26,16 @@ TickEvents.onStartClientTick { ctx ->
 
         ParticleBuilder.get("test_particle", world, particleManager)
                 .setPosition(0, 70, 0)
+                .spawn()
+
+        ParticleBuilder.create(world, ctx.client.particleManager)
+                .setType(GroovyParticleTypes.RANDOM_SIMPLEPARTICLE())
+                .setPosition(player.getPos())
+                .setVelocity(vx, vy, vz)
+                .setVelocitySpread(1.0f)
+                .setColor(1.0f, 1.0f, 0.0f)
+                .setScale(1.0f)
+                .setCount(10)
                 .spawn()
 
     }

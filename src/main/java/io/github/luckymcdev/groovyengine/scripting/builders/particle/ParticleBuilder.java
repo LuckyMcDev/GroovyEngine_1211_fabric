@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine.scripting.builders.particle;
 
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -32,9 +33,12 @@ public class ParticleBuilder {
     private final World world;
     private final ParticleManager particleManager;
 
-    private ParticleType<DustParticleEffect> type;
+    private ParticleType<?> type;
+    private ParticleEffect particleData; // optional custom data
+
     private Vec3d position = Vec3d.ZERO;
     private Vec3d velocity = Vec3d.ZERO;
+
     private float red = 1.0f, green = 1.0f, blue = 1.0f, scale = 1.0f;
     private int count = 1;
     private int lifetime = 20;
@@ -46,8 +50,17 @@ public class ParticleBuilder {
     }
 
     // Fluent setters
-    public ParticleBuilder setType(ParticleType<DustParticleEffect> type) {
+    public ParticleBuilder setType(ParticleType<?> type) {
         this.type = type;
+        return this;
+    }
+
+    /**
+     * Set custom ParticleEffect data (e.g. DustParticleEffect with color/scale).
+     * If not set, dust color will be built from setColor and setScale if type is dust.
+     */
+    public ParticleBuilder setParticleData(ParticleEffect data) {
+        this.particleData = data;
         return this;
     }
 
@@ -66,13 +79,13 @@ public class ParticleBuilder {
         return this;
     }
 
-    public ParticleBuilder setVelocitySpread(float spread) {
-        this.velocitySpread = spread;
+    public ParticleBuilder setVelocity(Vec3d vel) {
+        this.velocity = vel;
         return this;
     }
 
-    public ParticleBuilder setVelocity(Vec3d vel) {
-        this.velocity = vel;
+    public ParticleBuilder setVelocitySpread(float spread) {
+        this.velocitySpread = spread;
         return this;
     }
 
@@ -103,21 +116,33 @@ public class ParticleBuilder {
             throw new IllegalStateException("Particle type not set");
         }
 
-        DustParticleEffect effect = new DustParticleEffect(new Vector3f(red, green, blue), scale);
+        // Prepare particle effect data
+        ParticleEffect effectData = this.particleData;
+
+        // If no custom data and type is dust, create DustParticleEffect using color and scale
+        if (effectData == null && type == net.minecraft.particle.ParticleTypes.DUST) {
+            effectData = new DustParticleEffect(new Vector3f(red, green, blue), scale);
+        }
 
         for (int i = 0; i < count; i++) {
             double dx = velocity.x + (Math.random() - 0.5) * velocitySpread;
             double dy = velocity.y + (Math.random() - 0.5) * velocitySpread;
             double dz = velocity.z + (Math.random() - 0.5) * velocitySpread;
 
-            world.addParticle(effect, position.x, position.y, position.z, dx, dy, dz);
+            if (effectData != null) {
+                // Particle type with data
+                world.addParticle(effectData, position.x, position.y, position.z, dx, dy, dz);
+            } else {
+                // Particle type without data
+                world.addParticle((ParticleEffect) type, position.x, position.y, position.z, dx, dy, dz);
+            }
         }
     }
-
 
     private ParticleBuilder copy(World world, ParticleManager mgr) {
         ParticleBuilder b = new ParticleBuilder(world, mgr);
         b.type = this.type;
+        b.particleData = this.particleData;
         b.position = this.position;
         b.velocity = this.velocity;
         b.red = this.red;
@@ -126,6 +151,7 @@ public class ParticleBuilder {
         b.scale = this.scale;
         b.count = this.count;
         b.lifetime = this.lifetime;
+        b.velocitySpread = this.velocitySpread;
         return b;
     }
 

@@ -1,4 +1,5 @@
 //priority=1
+package scripts.common
 
 BlockBuilder.register("banana_block")
         .displayName("Banana Block")
@@ -61,4 +62,3 @@ Logger.error("""
     - A smoking recipe (banana → cooked_rabbit)
     - A campfire cooking recipe (banana → baked_potato)
     """)
-

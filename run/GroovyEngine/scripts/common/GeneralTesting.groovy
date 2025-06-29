@@ -1,4 +1,4 @@
-//priority=3
+//priority=0
 package scripts.common
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -11,7 +11,8 @@ PlayerEvents.onItemUse { ctx ->
     return new TypedActionResult<ItemStack>(ActionResult.PASS, ctx.player.getStackInHand(ctx.hand))
 }
 
-
-static def helloWorld() {
-    return "Hello World";
+def helloWorld() {
+    return "Hello from closure!"
 }
+
+Globals.put("helloWorld", " hello !!!!!!!") // store reference

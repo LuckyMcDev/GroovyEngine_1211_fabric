@@ -62,3 +62,6 @@ Logger.error("""
     - A smoking recipe (banana → cooked_rabbit)
     - A campfire cooking recipe (banana → baked_potato)
     """)
+
+def fn = Globals.get("helloWorld")
+Logger.info(fn)

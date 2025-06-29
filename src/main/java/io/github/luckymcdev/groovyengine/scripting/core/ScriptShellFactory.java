@@ -10,6 +10,7 @@ import io.github.luckymcdev.groovyengine.scripting.builders.particle.GroovyParti
 import io.github.luckymcdev.groovyengine.scripting.events.*;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiBinding;
 import io.github.luckymcdev.groovyengine.scripting.input.KeysBinding;
+import io.github.luckymcdev.groovyengine.scripting.utils.Globals;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyLogger;
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
@@ -76,6 +77,8 @@ public class  ScriptShellFactory {
 
         binding.setVariable("ParticleBuilder", ParticleBuilder.class);
         binding.setVariable("GroovyParticleTypes", GroovyParticleTypes.class);
+
+        binding.setVariable("Globals", Globals.class);
 
         // more bindings...
 

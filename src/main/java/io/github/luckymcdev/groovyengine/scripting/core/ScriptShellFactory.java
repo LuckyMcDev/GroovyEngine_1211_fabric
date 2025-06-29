@@ -4,10 +4,9 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.scripting.builders.BlockBuilder;
-import io.github.luckymcdev.groovyengine.scripting.builders.ItemBuilder;
-import io.github.luckymcdev.groovyengine.scripting.builders.RecipeBuilder;
-import io.github.luckymcdev.groovyengine.scripting.builders.ShaderManager;
+import io.github.luckymcdev.groovyengine.scripting.builders.*;
+import io.github.luckymcdev.groovyengine.scripting.builders.particle.ParticleBuilder;
+import io.github.luckymcdev.groovyengine.scripting.builders.particle.GroovyParticleTypes;
 import io.github.luckymcdev.groovyengine.scripting.events.*;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiBinding;
 import io.github.luckymcdev.groovyengine.scripting.input.KeysBinding;
@@ -74,6 +73,9 @@ public class  ScriptShellFactory {
         binding.setVariable("ItemSettings", Item.Settings.class);
         binding.setVariable("Block", Block.class);
         binding.setVariable("BlockSettings", net.minecraft.block.AbstractBlock.Settings.class);
+
+        binding.setVariable("ParticleBuilder", ParticleBuilder.class);
+        binding.setVariable("GroovyParticleTypes", GroovyParticleTypes.class);
 
         // more bindings...
 

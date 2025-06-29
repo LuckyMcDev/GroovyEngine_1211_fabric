@@ -13,13 +13,11 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class GroovyEngineClient implements ClientModInitializer {
-
     private boolean shownErrorScreen = false;
 
     @Override
     public void onInitializeClient() {
         GroovyKeybinds.init();
-
         DatapackGenerator.generate();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -31,6 +29,5 @@ public class GroovyEngineClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
             MainEditorImGui.render();
         });
-
     }
 }

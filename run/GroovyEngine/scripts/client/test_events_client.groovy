@@ -1,9 +1,8 @@
 
 Logger.info("TestEvents (client) initializing...")
 
-// Tick Events
 TickEvents.onStartClientTick { ctx ->
-    //Logger.info("TickEvents: Start Client Tick - Event: ${ctx.event}")
+    //Logger.info("TickEvents: End Client Tick - Event: ${ctx.event}")
 }
 
 TickEvents.onEndClientTick { ctx ->

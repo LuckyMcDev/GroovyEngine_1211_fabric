@@ -86,7 +86,6 @@ public class SandboxClassLoader extends URLClassLoader {
             "io.github.luckymcdev.groovyengine.scripting.gui.",
             "io.github.luckymcdev.groovyengine.scripting.input.",
             "io.github.luckymcdev.groovyengine.scripting.utils.",
-            "io.github.luckymcdev.groovyengine.scripting.core.GroovyEngineInitializer",
             "io.github.luckymcdev.groovyengine.util."
     );
 

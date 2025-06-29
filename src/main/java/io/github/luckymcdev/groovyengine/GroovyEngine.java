@@ -32,7 +32,6 @@ public class GroovyEngine implements ModInitializer {
 		System.out.println("Loading Scripts");
 		GroovyScriptManager.initialize();
 
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(this::onDataPackReloadEnd);
 		ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(this::onDataPackReloadStart);
 	}
 
@@ -40,14 +39,6 @@ public class GroovyEngine implements ModInitializer {
 		System.out.println("GroovyEngine: Scripts reload is starting");
 		GroovyScriptManager.reloadScripts();
 
-	}
-
-	private void onDataPackReloadEnd(MinecraftServer server, ResourceManager resourceManager, boolean success) {
-		if (success) {
-			System.out.println("GroovyEngine: Scripts reloaded successfully");
-		} else {
-			System.err.println("GroovyEngine: Scripts reload failed");
-		}
 	}
 
 }

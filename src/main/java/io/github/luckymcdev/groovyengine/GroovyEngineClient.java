@@ -13,6 +13,9 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class GroovyEngineClient implements ClientModInitializer {
+
+    private boolean shownErrorScreen = false;
+
     @Override
     public void onInitializeClient() {
         GroovyKeybinds.init();
@@ -23,7 +26,6 @@ public class GroovyEngineClient implements ClientModInitializer {
             if (GroovyKeybinds.openMainEditorKey.wasPressed()) {
                 client.setScreen(new MainEditorScreen(Text.of("Main Editor")));
             }
-
         });
 
         HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {

@@ -2,8 +2,7 @@ package io.github.luckymcdev.groovyengine.editor.windows;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
-import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderRegistry;
-import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderBuilder;
+import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderManager;
 
 import java.util.Map;
 
@@ -16,11 +15,11 @@ public class ShaderWindow {
         ImGui.text("Available Shaders:");
         ImGui.separator();
 
-        Map<String, ShaderBuilder> shaders = ShaderRegistry.getShaders();
+        Map<String, ShaderManager.ShaderBuilder> shaders = ShaderManager.getShaders();
 
-        for (Map.Entry<String, ShaderBuilder> entry : shaders.entrySet()) {
+        for (Map.Entry<String, ShaderManager.ShaderBuilder> entry : shaders.entrySet()) {
             String shaderName = entry.getKey();
-            ShaderBuilder builder = entry.getValue();
+            ShaderManager.ShaderBuilder builder = entry.getValue();
 
             boolean enabled = builder.isEnabled();
             ImBoolean checkboxState = new ImBoolean(enabled);

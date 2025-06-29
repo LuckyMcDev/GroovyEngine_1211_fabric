@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.scripting.builders.shaders;
+package io.github.luckymcdev.groovyengine.scripting.builders;
 
 import net.minecraft.util.Identifier;
 import org.ladysnake.satin.api.event.ShaderEffectRenderCallback;

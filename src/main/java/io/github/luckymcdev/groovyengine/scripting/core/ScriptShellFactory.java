@@ -7,7 +7,7 @@ import io.github.luckymcdev.groovyengine.GroovyEngine;
 import io.github.luckymcdev.groovyengine.scripting.builders.BlockBuilder;
 import io.github.luckymcdev.groovyengine.scripting.builders.ItemBuilder;
 import io.github.luckymcdev.groovyengine.scripting.builders.RecipeBuilder;
-import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderManager;
+import io.github.luckymcdev.groovyengine.scripting.builders.ShaderManager;
 import io.github.luckymcdev.groovyengine.scripting.events.*;
 import io.github.luckymcdev.groovyengine.scripting.gui.GuiBinding;
 import io.github.luckymcdev.groovyengine.scripting.input.KeysBinding;

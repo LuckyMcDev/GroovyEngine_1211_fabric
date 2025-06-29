@@ -2,7 +2,7 @@ package io.github.luckymcdev.groovyengine.editor.windows;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
-import io.github.luckymcdev.groovyengine.scripting.builders.shaders.ShaderManager;
+import io.github.luckymcdev.groovyengine.scripting.builders.ShaderManager;
 
 import java.util.Map;
 

@@ -1,9 +1,9 @@
 package io.github.luckymcdev.groovyengine.scripting.events;
 
+import groovy.lang.Closure;
 import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import groovy.lang.Closure;
 
 public class TickEvents {
 

@@ -6,6 +6,8 @@ import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.apache.commons.compress.utils.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -13,10 +15,6 @@ import org.lwjgl.opengl.GL11;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.Objects;
-
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class ImGuiImpl {

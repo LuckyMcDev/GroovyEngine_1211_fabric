@@ -1,9 +1,9 @@
 package io.github.luckymcdev.groovyengine.scripting.events;
 
+import groovy.lang.Closure;
 import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import groovy.lang.Closure;
 
 public class ConnectionEvents {
 

@@ -1,8 +1,8 @@
 package io.github.luckymcdev.groovyengine.scripting.events;
 
+import groovy.lang.Closure;
 import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import groovy.lang.Closure;
 
 public class CommandEvents {
 

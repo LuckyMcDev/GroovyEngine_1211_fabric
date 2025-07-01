@@ -3,9 +3,15 @@ package io.github.luckymcdev.groovyengine.packs;
 import com.google.gson.*;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class OpenloaderConfigPatcher {
 

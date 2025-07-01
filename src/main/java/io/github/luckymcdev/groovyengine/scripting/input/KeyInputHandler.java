@@ -1,15 +1,14 @@
 package io.github.luckymcdev.groovyengine.scripting.input;
 
 import groovy.lang.Closure;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class KeyInputHandler {

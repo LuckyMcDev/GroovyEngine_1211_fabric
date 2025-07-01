@@ -1,14 +1,12 @@
 package io.github.luckymcdev.groovyengine.scripting.security; // New package for security classes
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
+
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.Permission;
-import java.security.ProtectionDomain;
 import java.security.CodeSource;
 import java.security.Permissions;
 import java.util.Set;
-import java.util.Collections;
 
 public class SandboxClassLoader extends URLClassLoader {
 

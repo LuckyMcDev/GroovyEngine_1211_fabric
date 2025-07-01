@@ -1,7 +1,6 @@
 package io.github.luckymcdev.groovyengine.scripting.input;
 
 import groovy.lang.Closure;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

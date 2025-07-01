@@ -2,7 +2,6 @@ package io.github.luckymcdev.groovyengine.editor.windows;
 
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.logging.InMemoryLogAppender;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

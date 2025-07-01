@@ -1,13 +1,11 @@
 package io.github.luckymcdev.groovyengine;
 
+import io.github.luckymcdev.groovyengine.logging.LogCapture;
 import io.github.luckymcdev.groovyengine.packs.OpenloaderConfigPatcher;
-import io.github.luckymcdev.groovyengine.packs.structure.DatapackGenerator;
 import io.github.luckymcdev.groovyengine.packs.structure.GroovyEnginePackRootGenerator;
 import io.github.luckymcdev.groovyengine.packs.structure.ResourcepackGenerator;
 import io.github.luckymcdev.groovyengine.scripting.core.GroovyScriptManager;
-import io.github.luckymcdev.groovyengine.logging.LogCapture;
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.MinecraftServer;

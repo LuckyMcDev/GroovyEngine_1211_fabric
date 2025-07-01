@@ -1,11 +1,10 @@
 package io.github.luckymcdev.groovyengine.input;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.glfw.GLFW;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class GroovyKeybinds {

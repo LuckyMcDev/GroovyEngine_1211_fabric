@@ -1,11 +1,11 @@
 package io.github.luckymcdev.groovyengine.scripting.events;
 
+import groovy.lang.Closure;
 import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.event.player.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.item.ItemStack;
-import groovy.lang.Closure;
 
 public class PlayerEvents {
 

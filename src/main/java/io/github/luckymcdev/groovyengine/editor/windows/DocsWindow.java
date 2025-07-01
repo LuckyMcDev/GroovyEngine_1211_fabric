@@ -1,7 +1,6 @@
 package io.github.luckymcdev.groovyengine.editor.windows;
 
 import imgui.ImGui;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

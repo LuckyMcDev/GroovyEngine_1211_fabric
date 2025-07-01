@@ -1,13 +1,12 @@
 package io.github.luckymcdev.groovyengine.editor.core;
 
+import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.editor.windows.ConsoleWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.DocsWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.EditorWindow;
 import io.github.luckymcdev.groovyengine.editor.windows.ShaderWindow;
-import io.github.luckymcdev.groovyengine.scripting.gui.GuiRegistry;
 import io.github.luckymcdev.groovyengine.imgui.ImGuiImpl;
-import imgui.ImGui;
-
+import io.github.luckymcdev.groovyengine.scripting.gui.GuiRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

@@ -2,11 +2,10 @@
 
 Logger.info("This is a log line from the ingame editor")
 
-def blitShader = ShaderManager.create("groovyengine:blit")
+// Standardized ShaderBuilder usage
+def blitShader = ShaderManager.register("blit")
         .path("groovyengine:shaders/post/blit.json")
+        .build() // Finalize and register
 
-blitShader.build();
-
-ShaderManager.register("Crt Shader", blitShader);
-
-
+// Enable if needed
+// blitShader.enable()

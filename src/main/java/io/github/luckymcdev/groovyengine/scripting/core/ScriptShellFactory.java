@@ -17,6 +17,7 @@ import io.github.luckymcdev.groovyengine.scripting.utils.Globals;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyEngineScriptUtils;
 import io.github.luckymcdev.groovyengine.scripting.utils.GroovyLogger;
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
+import io.github.luckymcdev.groovyengine.util.events.ShellBindingEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
@@ -83,7 +84,7 @@ public class  ScriptShellFactory {
 
         binding.setVariable("Globals", Globals.class);
 
-        // more bindings...
+        ShellBindingEvents.BINDING_READY.invoker().onBindingReady(binding);
 
         return new GroovyShell(binding, createCompilerConfig());
     }

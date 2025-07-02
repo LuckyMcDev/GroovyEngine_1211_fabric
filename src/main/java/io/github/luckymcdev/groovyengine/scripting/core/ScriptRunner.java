@@ -19,6 +19,7 @@ public class ScriptRunner {
 
     private static final List<String> scriptLoadErrors = new CopyOnWriteArrayList<>();
     private static TinyRemapper tinyRemapper;
+    private static final boolean IS_DEV_CHECKING_ENABLED = false;
 
     // Add a method to set the TinyRemapper instance
     public static void setTinyRemapper(TinyRemapper remapper) {
@@ -34,13 +35,17 @@ public class ScriptRunner {
     }
 
     private static String remapImports(Path script) throws IOException {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            return Files.readString(script, StandardCharsets.UTF_8);
-        }
 
-        if (tinyRemapper == null) {
-            GroovyEngine.LOGGER.warn("[GroovyEngine] TinyRemapper not initialized, skipping remapping");
-            return Files.readString(script, StandardCharsets.UTF_8);
+        if (IS_DEV_CHECKING_ENABLED) {
+
+            if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                return Files.readString(script, StandardCharsets.UTF_8);
+            }
+
+            if (tinyRemapper == null) {
+                GroovyEngine.LOGGER.warn("[GroovyEngine] TinyRemapper not initialized, skipping remapping");
+                return Files.readString(script, StandardCharsets.UTF_8);
+            }
         }
 
         List<String> lines = Files.readAllLines(script, StandardCharsets.UTF_8);

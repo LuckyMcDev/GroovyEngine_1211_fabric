@@ -11,13 +11,12 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
+
 
 public class GroovyEngine implements ModInitializer {
 	public static final String MODID = "groovyengine";
@@ -28,26 +27,26 @@ public class GroovyEngine implements ModInitializer {
 	public void onInitialize() {
 		LogCapture.hookLog4j();
 
-		TinyRemapper tinyRemapper = new TinyRemapper();
-		try {
-			InputStream tinyStream = this.getClass().getResourceAsStream("/assets/groovyengine/tiny/mappings.tiny");
-			if (tinyStream == null) {
-				throw new RuntimeException("Could not find mappings.tiny in resources");
-			}
-			tinyRemapper.loadTinyFile(tinyStream);
-
-			// Set the remapper for the ScriptRunner to use
-			ScriptRunner.setTinyRemapper(tinyRemapper);
-
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to load tiny mappings", e);
-		}
-
 		OpenloaderConfigPatcher.patch();
 
 		LOGGER.info("Generating Pack Structure");
 		GroovyEnginePackRootGenerator.generate();
 		ResourcepackGenerator.generate();
+
+		try (InputStream stream = GroovyEngine.class.getResourceAsStream("/assets/groovyengine/tiny/mappings.tiny")) {
+			if (stream == null) {
+				throw new RuntimeException("mappings.tiny not found in assets");
+			}
+
+			TinyRemapper remapper = new TinyRemapper();
+			remapper.loadTinyFile(stream);
+
+			LOGGER.error(remapper.mapToObfuscated("net/minecraft/item/Item"));
+
+			ScriptRunner.setTinyRemapper(remapper);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to load tiny mappings", e);
+		}
 
 		System.out.println("Loading Scripts");
 		GroovyScriptManager.initialize();

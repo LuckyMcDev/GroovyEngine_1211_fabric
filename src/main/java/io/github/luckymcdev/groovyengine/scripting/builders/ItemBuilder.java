@@ -38,6 +38,13 @@ public class ItemBuilder {
         return new ItemBuilder(sharedHelper, name);
     }
 
+    public static ItemBuilder registerCustom(String name, Item customItem) {
+        if (sharedHelper == null) throw new IllegalStateException("Shared helper not set!");
+        ItemBuilder builder = new ItemBuilder(sharedHelper, name);
+        builder.item = customItem; // directly assign the custom item
+        return builder;
+    }
+
     public ItemBuilder settings(Consumer<Item.Settings> consumer) {
         consumer.accept(this.settings);
         return this;
@@ -56,16 +63,17 @@ public class ItemBuilder {
     public Item build() {
         if (item == null) {
             item = new Item(settings);
-            registry.register(name, item);
-
-            ResourcePackDataGenerator.generateItemModel(name, GroovyEngine.MODID + ":item/" + name);
-
-            if (displayName != null) {
-                LangGenerator.addLangEntry("item." + GroovyEngine.MODID + "." + name, displayName);
-            } else {
-                LangGenerator.addLangEntry("item." + GroovyEngine.MODID + "." + name, LangGenerator.toDisplayName(name));
-            }
         }
+
+        registry.register(name, item);
+        ResourcePackDataGenerator.generateItemModel(name, GroovyEngine.MODID + ":item/" + name);
+
+        if (displayName != null) {
+            LangGenerator.addLangEntry("item." + GroovyEngine.MODID + "." + name, displayName);
+        } else {
+            LangGenerator.addLangEntry("item." + GroovyEngine.MODID + "." + name, LangGenerator.toDisplayName(name));
+        }
+
         return item;
     }
 }

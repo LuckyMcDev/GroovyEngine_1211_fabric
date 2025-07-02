@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "groovyengine:block/custom_test_block"
+    }
+  }
+}

@@ -1,4 +1,6 @@
 {
   "block.groovyengine.banana_block": "Banana Block",
-  "item.groovyengine.banana": "Banana"
+  "item.groovyengine.banana": "Banana",
+  "item.groovyengine.test_item": "Test Item",
+  "block.groovyengine.custom_test_block": "Custom Test Block"
 }

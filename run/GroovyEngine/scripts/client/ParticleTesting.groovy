@@ -1,4 +1,4 @@
-// Tick Events
+//disabled
 TickEvents.onStartClientTick { ctx ->
     def world = ctx.client.world
     def player = ctx.client.player

@@ -8,7 +8,7 @@ Logger.info("TestEvents (common) initializing...")
 
 // Player Events
 PlayerEvents.onBlockBreak { ctx ->
-    Logger.info("PlayerEvents: Block Broken at ${ctx.pos} by ${ctx.player} - Event: ${ctx.event}")
+    //Logger.info("PlayerEvents: Block Broken at ${ctx.pos} by ${ctx.player} - Event: ${ctx.event}")
     return ActionResult.PASS
 }
 

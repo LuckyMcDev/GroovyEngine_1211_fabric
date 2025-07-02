@@ -1,19 +1,20 @@
+// Import statements that will be remapped by GroovyEngine
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.DrawContext
+import net.minecraft.text.Text
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.MinecraftClient
+import net.minecraft.util.ActionResult
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.MinecraftClient;
-
-public class SimpleTextScreen extends Screen {
-
-    public SimpleTextScreen() {
-        super(Text.literal("Simple Text Screen"));
+// Define the custom screen class using Groovy syntax
+class SimpleTextScreen extends Screen {
+    SimpleTextScreen() {
+        super(Text.literal("Simple Text Screen"))
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
+    void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta)
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
                 Text.literal("Hello from GroovyEngine!"),
@@ -24,11 +25,12 @@ public class SimpleTextScreen extends Screen {
     }
 
     @Override
-    public boolean shouldCloseOnEsc() {
-        return true;
+    boolean shouldCloseOnEsc() {
+        return true
     }
 }
 
+// Script logic
 def openScreenNextTick = true
 
 TickEvents.onEndClientTick { ctx ->
@@ -43,4 +45,3 @@ PlayerEvents.onBlockBreak { ctx ->
     Logger.info("Open Screen?")
     return ActionResult.PASS
 }
-

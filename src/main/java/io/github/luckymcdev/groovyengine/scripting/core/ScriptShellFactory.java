@@ -99,13 +99,6 @@ public class  ScriptShellFactory {
                 "net.minecraft.text", "com.mojang.brigadier"
         );
 
-        imports.addImports(
-                "net.minecraft.block.Blocks",
-                "net.minecraft.item.ItemStack",
-                "net.minecraft.util.ActionResult",
-                "net.minecraft.util.TypedActionResult"
-        );
-
         config.addCompilationCustomizers(imports);
 
         SecureASTCustomizer secure = new SecureASTCustomizer();

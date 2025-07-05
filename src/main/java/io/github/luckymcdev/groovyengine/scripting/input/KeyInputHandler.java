@@ -1,18 +1,18 @@
 package io.github.luckymcdev.groovyengine.scripting.input;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import groovy.lang.Closure;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 import java.util.HashMap;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class KeyInputHandler {
 
-    private static final Minecraft mc = Minecraft.getInstance();
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     private static final Map<String, Closure<?>> keyListeners = new HashMap<>();
     private static final Map<String, Boolean> lastKeyState = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class KeyInputHandler {
                 int keyCode = getKeyCodeFromName(keyName);
                 if (keyCode == -1) continue;
 
-                boolean isPressed = InputConstants.isKeyDown(mc.getWindow().getWindow(), keyCode);
+                boolean isPressed = InputUtil.isKeyPressed(mc.getWindow().getHandle(), keyCode);
                 boolean wasPressed = lastKeyState.getOrDefault(keyName, false);
 
                 if (isPressed && !wasPressed) {
@@ -47,11 +47,11 @@ public class KeyInputHandler {
     }
 
     private static int getKeyCodeFromName(String keyName) {
-        InputConstants.Key key = InputConstants.getKey("key.keyboard." + keyName.toLowerCase());
-        if (key == InputConstants.UNKNOWN) {
+        InputUtil.Key key = InputUtil.fromTranslationKey("key.keyboard." + keyName.toLowerCase());
+        if (key == InputUtil.UNKNOWN_KEY) {
             return -1;
         }
-        return key.getValue();
+        return key.getCode();
     }
 
 

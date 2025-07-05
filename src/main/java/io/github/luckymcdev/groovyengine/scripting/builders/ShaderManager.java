@@ -6,7 +6,7 @@ import org.ladysnake.satin.api.managed.ShaderEffectManager;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 /**
  * Manager for creating and controlling shader effects with builder pattern.
@@ -20,13 +20,13 @@ public class ShaderManager {
      */
     public static class ShaderBuilder {
         private final String id;
-        private final ResourceLocation shaderId;
+        private final Identifier shaderId;
         private ManagedShaderEffect shaderEffect;
         private boolean enabled = false;
 
         private ShaderBuilder(String id) {
             this.id = id;
-            this.shaderId = ResourceLocation.parse(id);
+            this.shaderId = Identifier.of(id);
         }
 
         /**
@@ -35,7 +35,7 @@ public class ShaderManager {
          * @return This builder
          */
         public ShaderBuilder path(String path) {
-            this.shaderEffect = ShaderEffectManager.getInstance().manage(ResourceLocation.parse(path));
+            this.shaderEffect = ShaderEffectManager.getInstance().manage(Identifier.of(path));
             return this;
         }
 

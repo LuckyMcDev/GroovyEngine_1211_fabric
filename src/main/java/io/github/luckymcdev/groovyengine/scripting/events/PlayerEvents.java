@@ -3,9 +3,9 @@ package io.github.luckymcdev.groovyengine.scripting.events;
 import groovy.lang.Closure;
 import io.github.luckymcdev.groovyengine.scripting.events.context.EventContext;
 import net.fabricmc.fabric.api.event.player.*;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.TypedActionResult;
 
 public class PlayerEvents {
 
@@ -20,9 +20,9 @@ public class PlayerEvents {
 
             Object result = closure.call(ctx);
 
-            if (result instanceof InteractionResult) {
-                InteractionResult action = (InteractionResult) result;
-                return action != InteractionResult.FAIL; // false = cancel
+            if (result instanceof ActionResult) {
+                ActionResult action = (ActionResult) result;
+                return action != ActionResult.FAIL; // false = cancel
             }
 
             // fallback to default
@@ -39,7 +39,7 @@ public class PlayerEvents {
                     .withHand(hand)
                     .withBlockHitResult(hitResult);
             Object result = closure.call(ctx);
-            return result instanceof InteractionResult ? (InteractionResult) result : InteractionResult.PASS;
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 
@@ -50,8 +50,8 @@ public class PlayerEvents {
                     .withWorld(world)
                     .withHand(hand);
             Object result = closure.call(ctx);
-            return result instanceof InteractionResultHolder ? (InteractionResultHolder<ItemStack>) result :
-                    new InteractionResultHolder<>(InteractionResult.PASS, player.getItemInHand(hand));
+            return result instanceof TypedActionResult ? (TypedActionResult<ItemStack>) result :
+                    new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         });
     }
 
@@ -64,7 +64,7 @@ public class PlayerEvents {
                     .withEntity(entity)
                     .withEntityHitResult(hitResult);
             Object result = closure.call(ctx);
-            return result instanceof InteractionResult ? (InteractionResult) result : InteractionResult.PASS;
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 
@@ -77,7 +77,7 @@ public class PlayerEvents {
                     .withEntity(entity)
                     .withEntityHitResult(hitResult);
             Object result = closure.call(ctx);
-            return result instanceof InteractionResult ? (InteractionResult) result : InteractionResult.PASS;
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 
@@ -90,7 +90,7 @@ public class PlayerEvents {
                     .withPos(pos)
                     .withDirection(direction);
             Object result = closure.call(ctx);
-            return result instanceof InteractionResult ? (InteractionResult) result : InteractionResult.PASS;
+            return result instanceof ActionResult ? (ActionResult) result : ActionResult.PASS;
         });
     }
 }

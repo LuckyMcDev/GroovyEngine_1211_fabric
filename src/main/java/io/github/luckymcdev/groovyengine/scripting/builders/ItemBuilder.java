@@ -5,12 +5,12 @@ import io.github.luckymcdev.groovyengine.packs.datagen.LangGenerator;
 import io.github.luckymcdev.groovyengine.packs.datagen.ResourcePackDataGenerator;
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
 import java.util.function.Consumer;
-import net.minecraft.world.item.Item;
+import net.minecraft.item.Item;
 
 public class ItemBuilder {
     private final RegistryHelper<Item> registry;
     private final String name;
-    private Item.Properties settings;
+    private Item.Settings settings;
     private String displayName;
     private String texturePath;
 
@@ -21,7 +21,7 @@ public class ItemBuilder {
     private ItemBuilder(RegistryHelper<Item> registry, String name) {
         this.registry = registry;
         this.name = name;
-        this.settings = new Item.Properties();
+        this.settings = new Item.Settings();
     }
 
     public static void setSharedHelper(RegistryHelper<Item> helper) {
@@ -44,7 +44,7 @@ public class ItemBuilder {
         return builder;
     }
 
-    public ItemBuilder settings(Consumer<Item.Properties> consumer) {
+    public ItemBuilder settings(Consumer<Item.Settings> consumer) {
         consumer.accept(this.settings);
         return this;
     }

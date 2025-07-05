@@ -9,7 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class GroovyEngineClient implements ClientModInitializer {
@@ -21,8 +21,8 @@ public class GroovyEngineClient implements ClientModInitializer {
         DatapackGenerator.generate();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (GroovyKeybinds.openMainEditorKey.consumeClick()) {
-                client.setScreen(new MainEditorScreen(Component.nullToEmpty("Main Editor")));
+            if (GroovyKeybinds.openMainEditorKey.wasPressed()) {
+                client.setScreen(new MainEditorScreen(Text.of("Main Editor")));
             }
         });
 

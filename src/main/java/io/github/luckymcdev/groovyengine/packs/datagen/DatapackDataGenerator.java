@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public class DatapackDataGenerator {
 
@@ -24,7 +24,7 @@ public class DatapackDataGenerator {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 
-    public static void generateShapedRecipe(ResourceLocation recipeId, String[] pattern, Map<Character, String> key, ResourceLocation resultId, int count) {
+    public static void generateShapedRecipe(Identifier recipeId, String[] pattern, Map<Character, String> key, Identifier resultId, int count) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "minecraft:crafting_shaped");
 
@@ -57,7 +57,7 @@ public class DatapackDataGenerator {
     }
 
 
-    public static void generateShapelessRecipe(ResourceLocation recipeId, String[] ingredients, ResourceLocation resultId, int count) {
+    public static void generateShapelessRecipe(Identifier recipeId, String[] ingredients, Identifier resultId, int count) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "minecraft:crafting_shapeless");
 
@@ -84,7 +84,7 @@ public class DatapackDataGenerator {
     }
 
 
-    public static void generateCookingRecipe(ResourceLocation recipeId, String type, String ingredient, ResourceLocation resultId, float experience, int cookingTime) {
+    public static void generateCookingRecipe(Identifier recipeId, String type, String ingredient, Identifier resultId, float experience, int cookingTime) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", type);
 
@@ -106,7 +106,7 @@ public class DatapackDataGenerator {
         writeRecipeFile(DATAPACK_RECIPES_DIR, recipeId, recipeJson);
     }
 
-    private static void writeRecipeFile(Path directory, ResourceLocation id, JsonObject json) {
+    private static void writeRecipeFile(Path directory, Identifier id, JsonObject json) {
         Path jsonFile = directory.resolve(id.getPath() + ".json");
         try {
             Files.createDirectories(directory);

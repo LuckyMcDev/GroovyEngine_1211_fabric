@@ -1,9 +1,9 @@
 package io.github.luckymcdev.groovyengine.mixin.rendering;
 
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.DisplayEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +18,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
             cancellable = true
     )
     private void alwaysRenderDisplayEntities(T entity, Frustum frustum, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
-        if (entity instanceof Display.ItemDisplay || entity instanceof Display.BlockDisplay) {
+        if (entity instanceof DisplayEntity.ItemDisplayEntity || entity instanceof DisplayEntity.BlockDisplayEntity) {
             cir.setReturnValue(true);
         }
     }

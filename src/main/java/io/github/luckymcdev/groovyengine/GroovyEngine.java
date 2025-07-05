@@ -41,7 +41,7 @@ public class GroovyEngine implements ModInitializer {
 			TinyRemapper remapper = new TinyRemapper();
 			remapper.loadTinyFile(stream);
 
-			LOGGER.error(remapper.mapToObfuscated("net/minecraft/item/Item"));
+			LOGGER.error(remapper.mapClass("net/minecraft/item/Item"));
 
 			ScriptRunner.setTinyRemapper(remapper);
 		} catch (IOException e) {

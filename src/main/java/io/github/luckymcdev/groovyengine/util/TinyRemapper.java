@@ -4,31 +4,50 @@ import java.io.*;
 import java.util.*;
 
 public class TinyRemapper {
-    private Map<String, String> namedToObfuscated = new HashMap<>();
-    private Map<String, String> obfuscatedToNamed = new HashMap<>();
+    public final Map<String, String> classMap = new HashMap<>();
+    public final Map<String, String> fieldMap = new HashMap<>();
+    public final Map<String, String> methodMap = new HashMap<>();
+    public final Map<String, String> innerClassMap = new HashMap<>();
 
-    public void loadTinyFile(InputStream inputStream) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+    public void loadTinyFile(InputStream in) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            String header = reader.readLine();
+            if (header == null || !header.startsWith("tiny")) {
+                throw new IOException("Invalid tiny header");
+            }
+
             String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("c\t")) {
-                    String[] parts = line.split("\t");
-                    if (parts.length >= 4) {
-                        String named = parts[1];        // first part
-                        String intermediary = parts[2]; // weird part
-                        String obfuscated = parts[3];   // obfuscated part
+            String currentClass = null;
 
-                        namedToObfuscated.put(named, obfuscated);
-                        obfuscatedToNamed.put(obfuscated, named);
-                    } else if (parts.length >= 3) {
-                        String first = parts[1];
-                        String second = parts[2];
-                        if (first.contains("/") && !first.startsWith("class_")) {
-                            namedToObfuscated.put(first, second);
-                            obfuscatedToNamed.put(second, first);
-                        } else {
-                            namedToObfuscated.put(second, first);
-                            obfuscatedToNamed.put(first, second);
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+                String[] p = line.split("\t");
+                switch (p[0]) {
+                    case "c" -> {
+                        if (p.length < 4) continue;
+                        String named = p[1];
+                        String obf = p[3];
+                        classMap.put(named, obf);
+                        currentClass = named;
+
+                        if (named.contains("$")) {
+                            String dottedNamed = named.replace('/', '.').replace('$', '.');
+                            String dottedObf = obf.replace('/', '.').replace('$', '.');
+                            innerClassMap.put(dottedNamed, dottedObf);
+                        }
+                    }
+                    case "f" -> {
+                        if (p.length >= 4) {
+                            String named = p[2];
+                            String obf = p[3];
+                            fieldMap.put(named, obf);
+                        }
+                    }
+                    case "m" -> {
+                        if (p.length >= 4) {
+                            String named = p[2];
+                            String obf = p[3];
+                            methodMap.put(named, obf);
                         }
                     }
                 }
@@ -36,11 +55,19 @@ public class TinyRemapper {
         }
     }
 
-    public String mapToObfuscated(String namedClass) {
-        return namedToObfuscated.getOrDefault(namedClass, namedClass);
+    public String mapClass(String internal) {
+        return classMap.getOrDefault(internal, internal);
     }
 
-    public String mapToNamed(String obfuscatedClass) {
-        return obfuscatedToNamed.getOrDefault(obfuscatedClass, obfuscatedClass);
+    public String mapField(String name) {
+        return fieldMap.getOrDefault(name, name);
+    }
+
+    public String mapMethod(String name) {
+        return methodMap.getOrDefault(name, name);
+    }
+
+    public Map<String, String> getInnerClasses() {
+        return innerClassMap;
     }
 }

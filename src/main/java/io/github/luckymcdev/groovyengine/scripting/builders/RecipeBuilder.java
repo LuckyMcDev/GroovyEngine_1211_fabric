@@ -2,10 +2,9 @@ package io.github.luckymcdev.groovyengine.scripting.builders;
 
 import io.github.luckymcdev.groovyengine.GroovyEngine;
 import io.github.luckymcdev.groovyengine.packs.datagen.DatapackDataGenerator;
-import net.minecraft.util.Identifier;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for creating various types of recipes with a fluent API.
@@ -66,19 +65,19 @@ public class RecipeBuilder {
      * Base class for all recipe builders.
      */
     public abstract static class AbstractRecipeBuilder<T extends AbstractRecipeBuilder<T>> {
-        protected final Identifier recipeId;
-        protected Identifier resultId;
+        protected final ResourceLocation recipeId;
+        protected ResourceLocation resultId;
         protected int count = 1;
 
         protected AbstractRecipeBuilder(String id) {
-            this.recipeId = Identifier.of(GroovyEngine.MODID, id);
+            this.recipeId = ResourceLocation.fromNamespaceAndPath(GroovyEngine.MODID, id);
         }
 
         /**
          * Sets the output item and count.
          */
         public T output(String itemIdentifier, int count) {
-            this.resultId = Identifier.of(itemIdentifier);
+            this.resultId = ResourceLocation.parse(itemIdentifier);
             this.count = count;
             return (T) this;
         }

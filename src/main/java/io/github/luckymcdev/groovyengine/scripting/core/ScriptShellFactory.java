@@ -20,10 +20,10 @@ import io.github.luckymcdev.groovyengine.util.RegistryHelper;
 import io.github.luckymcdev.groovyengine.util.events.ShellBindingEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.registry.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
@@ -56,16 +56,16 @@ public class  ScriptShellFactory {
         binding.setVariable("TickEvents", TickEvents.class);
         binding.setVariable("WorldEvents", WorldEvents.class);
 
-        binding.setVariable("Blocks", net.minecraft.block.Blocks.class);
-        binding.setVariable("ItemStack", net.minecraft.item.ItemStack.class);
-        binding.setVariable("ActionResult", net.minecraft.util.ActionResult.class);
-        binding.setVariable("TypedActionResult", net.minecraft.util.TypedActionResult.class);
+        binding.setVariable("Blocks", net.minecraft.world.level.block.Blocks.class);
+        binding.setVariable("ItemStack", net.minecraft.world.item.ItemStack.class);
+        binding.setVariable("ActionResult", net.minecraft.world.InteractionResult.class);
+        binding.setVariable("TypedActionResult", net.minecraft.world.InteractionResultHolder.class);
 
-        RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID);
+        RegistryHelper<Item> itemHelper = new RegistryHelper<>(BuiltInRegistries.ITEM, GroovyEngine.MODID);
         ItemBuilder.setSharedHelper(itemHelper);
         binding.setVariable("ItemBuilder", ItemBuilder.class);
 
-        RegistryHelper<Block> blockHelper = new RegistryHelper<>(Registries.BLOCK, GroovyEngine.MODID);
+        RegistryHelper<Block> blockHelper = new RegistryHelper<>(BuiltInRegistries.BLOCK, GroovyEngine.MODID);
         BlockBuilder.setSharedHelper(blockHelper);
         binding.setVariable("BlockBuilder", BlockBuilder.class);
 
@@ -74,10 +74,10 @@ public class  ScriptShellFactory {
         binding.setVariable("ShaderManager", ShaderManager.class);
 
         binding.setVariable("Item", Item.class);
-        binding.setVariable("ItemGroups", ItemGroups.class);
-        binding.setVariable("ItemSettings", Item.Settings.class);
+        binding.setVariable("ItemGroups", CreativeModeTabs.class);
+        binding.setVariable("ItemSettings", Item.Properties.class);
         binding.setVariable("Block", Block.class);
-        binding.setVariable("BlockSettings", net.minecraft.block.AbstractBlock.Settings.class);
+        binding.setVariable("BlockSettings", net.minecraft.world.level.block.state.BlockBehaviour.Properties.class);
 
         binding.setVariable("ParticleBuilder", ParticleBuilder.class);
         binding.setVariable("GroovyParticleTypes", GroovyParticleTypes.class);

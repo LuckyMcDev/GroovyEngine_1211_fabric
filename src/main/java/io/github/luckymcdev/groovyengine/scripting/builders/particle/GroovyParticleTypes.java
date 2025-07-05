@@ -1,6 +1,11 @@
 package io.github.luckymcdev.groovyengine.scripting.builders.particle;
 
-import net.minecraft.particle.*;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.Random;
 
@@ -8,7 +13,7 @@ public class GroovyParticleTypes {
 
 
     // Dust (colored) particle — supports color & scale
-    public static final ParticleType<DustParticleEffect> COLORED = ParticleTypes.DUST;
+    public static final ParticleType<DustParticleOptions> COLORED = ParticleTypes.DUST;
 
     // Simple particles without extra data
     public static final ParticleType<SimpleParticleType> ASH = ParticleTypes.ASH;
@@ -30,8 +35,8 @@ public class GroovyParticleTypes {
     public static final ParticleType<SimpleParticleType> SPIT = ParticleTypes.SPIT;
 
     // Block and item particles
-    public static final ParticleType<BlockStateParticleEffect> BLOCK = ParticleTypes.BLOCK;
-    public static final ParticleType<ItemStackParticleEffect> ITEM = ParticleTypes.ITEM;
+    public static final ParticleType<BlockParticleOption> BLOCK = ParticleTypes.BLOCK;
+    public static final ParticleType<ItemParticleOption> ITEM = ParticleTypes.ITEM;
 
     // Water and lava splash
     public static final ParticleType<SimpleParticleType> SPLASH = ParticleTypes.SPLASH;

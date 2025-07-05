@@ -4,20 +4,19 @@ import io.github.luckymcdev.groovyengine.GroovyEngine;
 import io.github.luckymcdev.groovyengine.packs.datagen.LangGenerator;
 import io.github.luckymcdev.groovyengine.packs.datagen.ResourcePackDataGenerator;
 import io.github.luckymcdev.groovyengine.util.RegistryHelper;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockBuilder {
     private final RegistryHelper<Block> registry;
     private final String name;
     private Block block;
-    private AbstractBlock.Settings settings;
+    private BlockBehaviour.Properties settings;
 
     private Class<? extends Block> blockClass = Block.class; // default vanilla Block class
 
@@ -26,7 +25,7 @@ public class BlockBuilder {
     private BlockBuilder(RegistryHelper<Block> registry, String name) {
         this.registry = registry;
         this.name = name;
-        this.settings = AbstractBlock.Settings.copy(net.minecraft.block.Blocks.STONE);
+        this.settings = BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.STONE);
     }
 
     public static void setSharedHelper(RegistryHelper<Block> helper) {
@@ -52,7 +51,7 @@ public class BlockBuilder {
         return builder;
     }
 
-    public BlockBuilder settings(Consumer<AbstractBlock.Settings> consumer) {
+    public BlockBuilder settings(Consumer<BlockBehaviour.Properties> consumer) {
         consumer.accept(this.settings);
         return this;
     }
@@ -78,7 +77,7 @@ public class BlockBuilder {
     public Block build() {
         if (block == null) {
             try {
-                Constructor<? extends Block> ctor = blockClass.getConstructor(AbstractBlock.Settings.class);
+                Constructor<? extends Block> ctor = blockClass.getConstructor(BlockBehaviour.Properties.class);
                 block = ctor.newInstance(settings);
             } catch (NoSuchMethodException e) {
                 try {
@@ -93,9 +92,9 @@ public class BlockBuilder {
 
         registry.register(name, block);
 
-        Item.Settings itemSettings = new Item.Settings();
+        Item.Properties itemSettings = new Item.Properties();
         BlockItem blockItem = new BlockItem(block, itemSettings);
-        new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID).register(name, blockItem);
+        new RegistryHelper<>(BuiltInRegistries.ITEM, GroovyEngine.MODID).register(name, blockItem);
 
         if (displayName != null) {
             LangGenerator.addLangEntry("block." + GroovyEngine.MODID + "." + name, displayName);

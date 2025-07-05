@@ -2,54 +2,53 @@ package io.github.luckymcdev.groovyengine.scripting.events.context;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item.TooltipContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands.CommandSelection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import java.util.List;
 
 public class EventContext {
     public final String event;
 
     // Player/Entity related
-    public PlayerEntity player;
-    public ServerPlayerEntity serverPlayer;
+    public Player player;
+    public ServerPlayer serverPlayer;
     public Entity entity;
     public BlockEntity blockEntity;
 
     // Block/World related
     public BlockState blockState;
     public BlockPos pos;
-    public World world;
-    public ServerWorld serverWorld;
+    public Level world;
+    public ServerLevel serverWorld;
     public Direction direction;
-    public Hand hand;
+    public InteractionHand hand;
     public BlockHitResult blockHitResult;
     public EntityHitResult entityHitResult;
 
     // Client/Server related
     public MinecraftServer server;
-    public MinecraftClient client;
+    public Minecraft client;
     public Screen screen;
     public int scaledWidth;
     public int scaledHeight;
@@ -57,29 +56,29 @@ public class EventContext {
     // Item/Tooltip related
     public ItemStack itemStack;
     public TooltipContext tooltipContext;
-    public TooltipType tooltipType;
-    public List<Text> tooltipLines;
+    public TooltipFlag tooltipType;
+    public List<Component> tooltipLines;
 
     // Command related
-    public CommandDispatcher<ServerCommandSource> commandDispatcher;
-    public CommandRegistryAccess commandRegistryAccess;
-    public RegistrationEnvironment commandEnvironment;
+    public CommandDispatcher<CommandSourceStack> commandDispatcher;
+    public CommandBuildContext commandRegistryAccess;
+    public CommandSelection commandEnvironment;
 
     // Connection related
     public PacketSender packetSender;
-    public ClientPlayNetworkHandler clientPlayNetworkHandler;
+    public ClientPacketListener clientPlayNetworkHandler;
 
     public EventContext(String event) {
         this.event = event;
     }
 
     // Player/Entity methods
-    public EventContext withPlayer(PlayerEntity player) {
+    public EventContext withPlayer(Player player) {
         this.player = player;
         return this;
     }
 
-    public EventContext withServerPlayer(ServerPlayerEntity serverPlayer) {
+    public EventContext withServerPlayer(ServerPlayer serverPlayer) {
         this.serverPlayer = serverPlayer;
         this.player = serverPlayer; // Also set the general player field
         return this;
@@ -106,12 +105,12 @@ public class EventContext {
         return this;
     }
 
-    public EventContext withWorld(World world) {
+    public EventContext withWorld(Level world) {
         this.world = world;
         return this;
     }
 
-    public EventContext withServerWorld(ServerWorld serverWorld) {
+    public EventContext withServerWorld(ServerLevel serverWorld) {
         this.serverWorld = serverWorld;
         this.world = serverWorld; // Also set the general world field
         return this;
@@ -122,7 +121,7 @@ public class EventContext {
         return this;
     }
 
-    public EventContext withHand(Hand hand) {
+    public EventContext withHand(InteractionHand hand) {
         this.hand = hand;
         return this;
     }
@@ -143,7 +142,7 @@ public class EventContext {
         return this;
     }
 
-    public EventContext withClient(MinecraftClient client) {
+    public EventContext withClient(Minecraft client) {
         this.client = client;
         return this;
     }
@@ -170,28 +169,28 @@ public class EventContext {
         return this;
     }
 
-    public EventContext withTooltipType(TooltipType tooltipType) {
+    public EventContext withTooltipType(TooltipFlag tooltipType) {
         this.tooltipType = tooltipType;
         return this;
     }
 
-    public EventContext withTooltipLines(List<Text> tooltipLines) {
+    public EventContext withTooltipLines(List<Component> tooltipLines) {
         this.tooltipLines = tooltipLines;
         return this;
     }
 
     // Command methods
-    public EventContext withCommandDispatcher(CommandDispatcher<ServerCommandSource> commandDispatcher) {
+    public EventContext withCommandDispatcher(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         this.commandDispatcher = commandDispatcher;
         return this;
     }
 
-    public EventContext withCommandRegistryAccess(CommandRegistryAccess commandRegistryAccess) {
+    public EventContext withCommandRegistryAccess(CommandBuildContext commandRegistryAccess) {
         this.commandRegistryAccess = commandRegistryAccess;
         return this;
     }
 
-    public EventContext withCommandEnvironment(RegistrationEnvironment commandEnvironment) {
+    public EventContext withCommandEnvironment(CommandSelection commandEnvironment) {
         this.commandEnvironment = commandEnvironment;
         return this;
     }
@@ -202,7 +201,7 @@ public class EventContext {
         return this;
     }
 
-    public EventContext withClientPlayNetworkHandler(ClientPlayNetworkHandler clientPlayNetworkHandler) {
+    public EventContext withClientPlayNetworkHandler(ClientPacketListener clientPlayNetworkHandler) {
         this.clientPlayNetworkHandler = clientPlayNetworkHandler;
         return this;
     }

@@ -2,7 +2,6 @@ package io.github.luckymcdev.groovyengine.scripting.core;
 
 import groovy.lang.GroovyShell;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
-import io.github.luckymcdev.groovyengine.util.mappings.*;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
@@ -13,23 +12,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScriptRunner {
     private static final List<String> scriptLoadErrors = new CopyOnWriteArrayList<>();
-
-    // Shared parser for production remapping
-    private static final ScriptParser SCRIPT_PARSER;
-
-    static {
-        try {
-            MappingsParser mappings = new MappingsParser("assets/groovyengine/tiny/mappings.json");
-            SCRIPT_PARSER = new ScriptParser(mappings);
-            GroovyEngine.LOGGER.info("[GroovyEngine] Mappings loaded for production.");
-        } catch (Exception e) {
-            throw new RuntimeException("[GroovyEngine] Failed to load mappings.json", e);
-        }
-    }
-
-    public static List<String> getScriptLoadErrors() {
-        return new ArrayList<>(scriptLoadErrors);
-    }
 
     public static void clearErrors() {
         scriptLoadErrors.clear();
@@ -42,8 +24,6 @@ public class ScriptRunner {
             GroovyEngine.LOGGER.warn("[GroovyEngine] folder not found: {}", folder);
             return;
         }
-
-        boolean isDev = FabricLoader.getInstance().isDevelopmentEnvironment();
 
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder, "*.groovy")) {
             List<Path> scripts = new ArrayList<>();
@@ -58,16 +38,8 @@ public class ScriptRunner {
 
                 try {
                     String raw = Files.readString(script, StandardCharsets.UTF_8);
-                    String toEvaluate = raw;
-
-                    if (!isDev) {
-                        // **only** remap in production
-                        toEvaluate = SCRIPT_PARSER.remapScript(raw);
-
-                        GroovyEngine.LOGGER.warn("=== Remapped Script ===\n{}", toEvaluate);
-                    }
-
-                    shell.evaluate(toEvaluate, script.getFileName().toString());
+                    String remapped = remapImports(raw);
+                    shell.evaluate(remapped, script.getFileName().toString());
                     GroovyEngine.LOGGER.info("[GroovyEngine] Loaded {}", script.getFileName());
 
                 } catch (Exception ex) {
@@ -81,5 +53,12 @@ public class ScriptRunner {
             GroovyEngine.LOGGER.error(err, e);
             scriptLoadErrors.add(err);
         }
+    }
+
+    private static String remapImports(String source) {
+        // Regex to find import net.minecraft.... or import com.mojang....
+        return source
+                .replaceAll("(?m)^\\s*import\\s+net\\.minecraft", "import generated.net.minecraft")
+                .replaceAll("(?m)^\\s*import\\s+com\\.mojang", "import generated.com.mojang");
     }
 }

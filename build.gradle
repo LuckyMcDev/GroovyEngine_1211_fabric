@@ -10,6 +10,10 @@ base {
 	archivesName = project.archives_base_name
 }
 
+test {
+	useJUnitPlatform()
+}
+
 repositories {
 	mavenCentral()
 
@@ -67,6 +71,12 @@ dependencies {
 	include "org.ladysnake:satin:${project.satin_version}"
 
 	include(implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
+
+
+
+	// Unit Testing
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
 }
 

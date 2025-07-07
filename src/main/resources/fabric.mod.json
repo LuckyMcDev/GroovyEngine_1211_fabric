@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"io.github.luckymcdev.groovyengine.GroovyEngineClient"
+		],
+		"preLaunch": [
+			"io.github.luckymcdev.groovyengine.GroovyEnginePreLoad"
 		]
 	},
 	"mixins": [

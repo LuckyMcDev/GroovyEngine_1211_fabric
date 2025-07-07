@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.scripting.core;
 
 import groovy.lang.Binding;
+import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
 import imgui.ImGui;
 import io.github.luckymcdev.groovyengine.GroovyEngine;
@@ -28,16 +29,19 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
 
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
-public class  ScriptShellFactory {
-    public static GroovyShell createShell(Path scriptPath) {
-        Binding binding = new Binding();
+public class ScriptShellFactory {
+    /** shared ClassLoader so all scripts see each others’ classes */
+    public static GroovyClassLoader createClassLoader() {
+        return new GroovyClassLoader(ScriptShellFactory.class.getClassLoader());
+    }
 
-        binding.setVariable("Logger", new GroovyLogger(scriptPath.getFileName().toString()));
+    public static Binding createBinding() {
+        Binding binding = new Binding();
+        binding.setVariable("Logger", new GroovyLogger("Global"));// fallback
         binding.setVariable("GeUtils", GroovyEngineScriptUtils.class);
         binding.setVariable("UUID", UUID.class);
         binding.setVariable("Duration", Duration.class);
@@ -49,6 +53,7 @@ public class  ScriptShellFactory {
             binding.setVariable("Keys", KeysBinding.class);
         }
 
+        // Event classes
         binding.setVariable("CommandEvents", CommandEvents.class);
         binding.setVariable("ConnectionEvents", ConnectionEvents.class);
         binding.setVariable("GuiEvents", GuiEvents.class);
@@ -56,11 +61,7 @@ public class  ScriptShellFactory {
         binding.setVariable("TickEvents", TickEvents.class);
         binding.setVariable("WorldEvents", WorldEvents.class);
 
-        binding.setVariable("Blocks", net.minecraft.block.Blocks.class);
-        binding.setVariable("ItemStack", net.minecraft.item.ItemStack.class);
-        binding.setVariable("ActionResult", net.minecraft.util.ActionResult.class);
-        binding.setVariable("TypedActionResult", net.minecraft.util.TypedActionResult.class);
-
+        // Builders & registries
         RegistryHelper<Item> itemHelper = new RegistryHelper<>(Registries.ITEM, GroovyEngine.MODID);
         ItemBuilder.setSharedHelper(itemHelper);
         binding.setVariable("ItemBuilder", ItemBuilder.class);
@@ -70,9 +71,9 @@ public class  ScriptShellFactory {
         binding.setVariable("BlockBuilder", BlockBuilder.class);
 
         binding.setVariable("RecipeBuilder", RecipeBuilder.class);
-
         binding.setVariable("ShaderManager", ShaderManager.class);
 
+        // Vanilla shortcuts
         binding.setVariable("Item", Item.class);
         binding.setVariable("ItemGroups", ItemGroups.class);
         binding.setVariable("ItemSettings", Item.Settings.class);
@@ -85,20 +86,17 @@ public class  ScriptShellFactory {
         binding.setVariable("Globals", Globals.class);
 
         ShellBindingEvents.BINDING_READY.invoker().onBindingReady(binding);
-
-        return new GroovyShell(binding, createCompilerConfig());
+        return binding;
     }
 
-    private static CompilerConfiguration createCompilerConfig() {
+    public static CompilerConfiguration createCompilerConfig() {
         CompilerConfiguration config = new CompilerConfiguration();
         ImportCustomizer imports = new ImportCustomizer();
-
         imports.addStarImports(
                 "java.lang", "java.util", "net.minecraft", "net.minecraft.util",
                 "net.minecraft.item", "net.minecraft.block", "net.minecraft.entity",
                 "net.minecraft.text", "com.mojang.brigadier"
         );
-
         config.addCompilationCustomizers(imports);
 
         SecureASTCustomizer secure = new SecureASTCustomizer();
@@ -109,8 +107,15 @@ public class  ScriptShellFactory {
         ));
         secure.setDisallowedReceivers(List.of("System", "Runtime", "Thread", "Class"));
         config.addCompilationCustomizers(secure);
-
         return config;
     }
-}
 
+    /** Build a shared shell for all scripts */
+    public static GroovyShell createSharedShell() {
+        return new GroovyShell(
+                createClassLoader(),
+                createBinding(),
+                createCompilerConfig()
+        );
+    }
+}

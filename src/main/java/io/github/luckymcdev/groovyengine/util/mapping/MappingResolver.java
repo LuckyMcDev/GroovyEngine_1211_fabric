@@ -13,6 +13,26 @@ public class MappingResolver {
     private final Map<String, Map<String, String>> fieldMap = new HashMap<>();
     private final Map<String, Map<String, String>> nestedClassMap = new HashMap<>();
 
+    public void loadAllMappings(String baseResourcePath) throws IOException {
+        // List all mapping files in the base resource path
+        String[] mappingFiles = {
+                "net/minecraft/item/Item",
+                "net/minecraft/block/Block",
+                // Add other paths to mapping files here
+        };
+
+        for (String filePath : mappingFiles) {
+            String resourcePath = baseResourcePath + filePath + ".mapping";
+            try (InputStream in = MappingResolver.class.getResourceAsStream(resourcePath)) {
+                if (in != null) {
+                    load(in);
+                } else {
+                    System.err.println("Mapping file not found: " + resourcePath);
+                }
+            }
+        }
+    }
+
     public void load(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
@@ -23,19 +43,15 @@ public class MappingResolver {
 
         while ((line = reader.readLine()) != null) {
             String trimmedLine = line.trim();
-
-            // Skip empty lines and comments
             if (trimmedLine.isEmpty() || trimmedLine.startsWith("COMMENT") || trimmedLine.startsWith("ARG")) {
                 continue;
             }
 
-            // Count indentation level
             int indentLevel = 0;
             for (char c : line.toCharArray()) {
                 if (c == '\t') {
                     indentLevel++;
                 } else if (c == ' ') {
-                    // Assume 4 spaces = 1 tab
                     indentLevel += 0.25;
                 } else {
                     break;
@@ -47,64 +63,49 @@ public class MappingResolver {
                 if (parts.length >= 3) {
                     String obfName = parts[1];
                     String deobfName = parts[2];
-
                     if (indentLevel == 0) {
-                        // Top-level class
                         currentObfClass = obfName.replace('/', '.');
                         currentDeobfClass = deobfName.replace('/', '.');
                         currentNestedObfClass = null;
                         currentNestedDeobfClass = null;
-
                         classMap.put(currentDeobfClass, currentObfClass);
                         fieldMap.put(currentDeobfClass, new HashMap<>());
                         methodMap.put(currentDeobfClass, new HashMap<>());
                     } else if (indentLevel >= 1 && currentDeobfClass != null) {
-                        // Nested class
                         currentNestedObfClass = obfName;
                         currentNestedDeobfClass = deobfName;
-
                         String fullNestedDeobf = currentDeobfClass + "$" + currentNestedDeobfClass;
                         String fullNestedObf = currentObfClass + "$" + currentNestedObfClass;
-
-                        // Store nested class mapping
                         nestedClassMap.computeIfAbsent(currentDeobfClass, k -> new HashMap<>())
                                 .put(currentNestedDeobfClass, currentNestedObfClass);
-
-                        // Also store full nested class mapping
                         classMap.put(fullNestedDeobf, fullNestedObf);
                         fieldMap.put(fullNestedDeobf, new HashMap<>());
                         methodMap.put(fullNestedDeobf, new HashMap<>());
                     }
                 }
-            }
-            else if (trimmedLine.startsWith("FIELD ")) {
+            } else if (trimmedLine.startsWith("FIELD ")) {
                 String[] parts = trimmedLine.split("\\s+");
                 if (parts.length >= 3) {
                     String obfName = parts[1];
                     String deobfName = parts[2];
-
                     if (indentLevel >= 1 && currentNestedDeobfClass != null) {
-                        // Field in nested class
                         String fullNestedDeobf = currentDeobfClass + "$" + currentNestedDeobfClass;
                         Map<String, String> fields = fieldMap.get(fullNestedDeobf);
                         if (fields != null) {
                             fields.put(deobfName, obfName);
                         }
                     } else if (currentDeobfClass != null) {
-                        // Field in main class
                         Map<String, String> fields = fieldMap.get(currentDeobfClass);
                         if (fields != null) {
                             fields.put(deobfName, obfName);
                         }
                     }
                 }
-            }
-            else if (trimmedLine.startsWith("METHOD ")) {
+            } else if (trimmedLine.startsWith("METHOD ")) {
                 String[] parts = trimmedLine.split("\\s+");
                 if (parts.length >= 2) {
                     String obfName = parts[1];
                     String deobfName = null;
-
                     if (parts.length >= 3) {
                         deobfName = parts[2];
                         if (deobfName.equals("<init>")) {
@@ -113,17 +114,14 @@ public class MappingResolver {
                             deobfName = deobfName.substring(0, deobfName.indexOf('('));
                         }
                     }
-
                     if (deobfName != null && !deobfName.isEmpty()) {
                         if (indentLevel >= 1 && currentNestedDeobfClass != null) {
-                            // Method in nested class
                             String fullNestedDeobf = currentDeobfClass + "$" + currentNestedDeobfClass;
                             Map<String, String> methods = methodMap.get(fullNestedDeobf);
                             if (methods != null) {
                                 methods.put(deobfName, obfName);
                             }
                         } else if (currentDeobfClass != null) {
-                            // Method in main class
                             Map<String, String> methods = methodMap.get(currentDeobfClass);
                             if (methods != null) {
                                 methods.put(deobfName, obfName);
@@ -157,18 +155,14 @@ public class MappingResolver {
     public String getObfNestedClassFull(String parentDeobfClass, String nestedClassName) {
         String parentObf = getObfClass(parentDeobfClass);
         String nestedObf = getObfNestedClass(parentDeobfClass, nestedClassName);
-
         if (parentObf != null && nestedObf != null) {
             return parentObf + "$" + nestedObf;
         }
-
-        // Fallback: try to find the nested class directly in classMap
         String fullNestedDeobf = parentDeobfClass + "$" + nestedClassName;
         String directMapping = getObfClass(fullNestedDeobf);
         if (directMapping != null) {
             return directMapping;
         }
-
         return null;
     }
 
@@ -185,19 +179,16 @@ public class MappingResolver {
     public void printLoadedMappings(String deobfClass) {
         System.out.println("=== Mappings for " + deobfClass + " ===");
         System.out.println("Obfuscated class: " + getObfClass(deobfClass));
-
         Map<String, String> fields = fieldMap.get(deobfClass);
         if (fields != null && !fields.isEmpty()) {
             System.out.println("Fields:");
             fields.forEach((deobf, obf) -> System.out.println("  " + deobf + " -> " + obf));
         }
-
         Map<String, String> methods = methodMap.get(deobfClass);
         if (methods != null && !methods.isEmpty()) {
             System.out.println("Methods:");
             methods.forEach((deobf, obf) -> System.out.println("  " + deobf + " -> " + obf));
         }
-
         Map<String, String> nestedClasses = nestedClassMap.get(deobfClass);
         if (nestedClasses != null && !nestedClasses.isEmpty()) {
             System.out.println("Nested Classes:");
@@ -210,7 +201,6 @@ public class MappingResolver {
     public void printAllClassMappings() {
         System.out.println("=== All Class Mappings ===");
         classMap.forEach((deobf, obf) -> System.out.println(deobf + " -> " + obf));
-
         System.out.println("\n=== All Nested Class Mappings ===");
         nestedClassMap.forEach((parent, nested) -> {
             System.out.println("Parent: " + parent);

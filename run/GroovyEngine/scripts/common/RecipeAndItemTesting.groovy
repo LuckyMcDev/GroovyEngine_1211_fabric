@@ -1,7 +1,6 @@
 //priority=1
 package scripts.common
 
-// Import statements that will be remapped by GroovyEngine
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.TypedActionResult

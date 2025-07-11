@@ -22,6 +22,7 @@ import io.github.luckymcdev.groovyengine.util.events.ShellBindingEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ScriptShellFactory {
-    /** shared ClassLoader so all scripts see each others’ classes */
+    /** shared ClassLoader so all scripts see each others' classes */
     public static GroovyClassLoader createClassLoader() {
         return new GroovyClassLoader(ScriptShellFactory.class.getClassLoader());
     }
@@ -70,6 +71,8 @@ public class ScriptShellFactory {
         BlockBuilder.setSharedHelper(blockHelper);
         binding.setVariable("BlockBuilder", BlockBuilder.class);
 
+        binding.setVariable("RegistryHelper", RegistryHelper.class);
+
         binding.setVariable("RecipeBuilder", RecipeBuilder.class);
         binding.setVariable("ShaderManager", ShaderManager.class);
 
@@ -79,6 +82,7 @@ public class ScriptShellFactory {
         binding.setVariable("ItemSettings", Item.Settings.class);
         binding.setVariable("Block", Block.class);
         binding.setVariable("BlockSettings", net.minecraft.block.AbstractBlock.Settings.class);
+        binding.setVariable("Fluid", Fluid.class);
 
         binding.setVariable("ParticleBuilder", ParticleBuilder.class);
         binding.setVariable("GroovyParticleTypes", GroovyParticleTypes.class);
@@ -95,7 +99,7 @@ public class ScriptShellFactory {
         imports.addStarImports(
                 "java.lang", "java.util", "net.minecraft", "net.minecraft.util",
                 "net.minecraft.item", "net.minecraft.block", "net.minecraft.entity",
-                "net.minecraft.text", "com.mojang.brigadier"
+                "net.minecraft.text", "com.mojang.brigadier", "net.minecraft.fluid"
         );
         config.addCompilationCustomizers(imports);
 
@@ -107,6 +111,9 @@ public class ScriptShellFactory {
         ));
         secure.setDisallowedReceivers(List.of("System", "Runtime", "Thread", "Class"));
         config.addCompilationCustomizers(secure);
+
+        config.addCompilationCustomizers(new CustomCompilationCustomizer());
+
         return config;
     }
 
